@@ -15,14 +15,31 @@ import org.bson.conversions.Bson;
  */
 public class MongoQuery {
     String collection,query;
+    Type type;
     Bson cond;
     Document values;
     List<String> fields;
 
+    public static enum Type {
+        INSERT,
+        SELECT,
+        UPDATE,
+        DELETE
+    }
+    
     public String getCollection() {
         return collection;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    
     public String getQuery() {
         return query;
     }
