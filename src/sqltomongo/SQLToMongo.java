@@ -32,6 +32,7 @@ public class SQLToMongo {
 //"VALUES (\"bcd001\",\n" +
 //"        45,\n" +
 //"        \"A\");")+"\n");
+//un-comment baris baris di bawah kalo mau konek ke db
         //MongoDB db = new MongoDB();
         //db.setDatabase("db1");
         SQLTranslator.SQLToMongo sqlToMongo = new SQLTranslator.SQLToMongo();
