@@ -54,13 +54,14 @@ public class SQLToMongo {
             query.setCollection(collection);
             query.setValues(doc);
             query.setQuery(mongo);
+            query.setType(MongoQuery.Type.INSERT);
         }
         else if (type.equals(SQLKeywords.SELECT)){
             String temp = tokens.get(1).getValue().toUpperCase();
             List<String> fields=null;
             Bson cond = null;
             int i =2;
-            if(!temp.equals("A")&& !temp.equals("*")){
+            if(!temp.equals("ALL")&& !temp.equals("*")){
                 temp = tokens.get(i).getValue();
                 fields = new ArrayList();
                 while (!temp.toUpperCase().equals(SQLKeywords.FROM)){
@@ -78,6 +79,7 @@ public class SQLToMongo {
             query.setFields(fields);
             query.setCollection(coll);
             query.setCond(cond);
+            query.setType(MongoQuery.Type.SELECT);
         }
             
         
