@@ -39,11 +39,26 @@ public class SQLToMongo {
         MongoQuery query = sqlToMongo.translate(p.getTokens());
         System.out.println(query.getFields().toString());
         System.out.println(query.getCond());
-//        for(Document d : db.executeQuery(query)){
+        if (null!=query.getType()) switch (query.getType()) {
+            case SELECT:
+                //        for(Document d : db.executeQuery(query)){
 //            System.out.println(d);
 //        }
-        
-        
+                System.out.println("coba");
+                //db.insertQuery(query);
+                break;
+                
+            case INSERT:
+                //db.executeUpdate(query);
+                break;
+            case UPDATE:
+                //db.execute
+                break;
+            default:
+                //db.executeDelete(query);
+                break;
+        }
+            
     }
     
 }
