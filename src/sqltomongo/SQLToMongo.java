@@ -23,8 +23,8 @@ public class SQLToMongo {
         Parser p = Parser.getSQLParser();
 //        System.out.println(p.parse("\"b\""));
         
-        System.out.println(p.parse("SELECT status\n" +
-"FROM users;"));
+        System.out.println(p.parse("SELECT *\n" +
+"FROM users where status =\"A\";"));
 //        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
 //"                  age,\n" +
 //"                  status)\n" +

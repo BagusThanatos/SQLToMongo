@@ -113,6 +113,9 @@ public class SQLToMongo {
             } else if (temp.equals(SQLKeywords.LT)){
                 if (var1) d = lt(valueT1,valueT2);
                 else d = lt(valueT2, valueT1);
+            } else if (temp.equals(SQLKeywords.GT)){
+                if (var1) d = gt(valueT1,valueT2);
+                else d = gt(valueT2, valueT1);
             } else if (temp.equals(SQLKeywords.LIKE)){
                 if(valueT2.charAt(0)=='%')
                     valueT2 = "/"+valueT2.substring(1);
