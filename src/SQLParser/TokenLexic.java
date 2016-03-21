@@ -48,4 +48,8 @@ public class TokenLexic {
         }
         return super.equals(o);
     }
+    @Override
+    public String toString(){
+        return value;
+    }
 }

@@ -36,6 +36,7 @@ public class SQLToMongo {
         //db.setDatabase("db1");
         SQLTranslator.SQLToMongo sqlToMongo = new SQLTranslator.SQLToMongo();
         MongoQuery query = sqlToMongo.translate(p.getTokens());
+        System.out.println(p.getTokens().toString());
         System.out.println(query.getFields().toString());
         System.out.println(query.getCond());
         if (null!=query.getType()) switch (query.getType()) {

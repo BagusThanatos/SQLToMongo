@@ -60,15 +60,15 @@ public class SQLToMongo {
             String temp = tokens.get(1).getValue().toUpperCase();
             List<String> fields=null;
             Bson cond = null;
-            int i =2;
+            int i =1;
             if(!temp.equals("ALL")&& !temp.equals("*")){
                 temp = tokens.get(i).getValue();
                 fields = new ArrayList();
                 while (!temp.toUpperCase().equals(SQLKeywords.FROM)){
                     if(!temp.equals(SQLKeywords.COMMA)){
-                        fields.add(tokens.get(i).getValue());
+                        fields.add(temp);
                     }
-                    temp=tokens.get(++i).getValue().toUpperCase();
+                    temp=tokens.get(++i).getValue();
                 }    
             }
             String coll = tokens.get(++i).getValue();
