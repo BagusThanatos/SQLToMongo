@@ -29,14 +29,14 @@ public class MongoDB {
     }
     public FindIterable<Document> executeQuery(MongoQuery query ){
         MongoCollection<Document> collection = md.getCollection(query.getCollection());
+        FindIterable<Document> result;
         if(query.getCond()!=null){
-            FindIterable<Document> result = 
-                    collection.find(query.getCond()).projection(Projections.include(query.getFields()));
-            return result;
-            
+            result = collection.find(query.getCond());
         }
-        
-        return collection.find();
+        else result = collection.find();
+        if(query.getFields()!=null) 
+            return result.projection(Projections.include(query.getFields()));
+        return result;
     }
     public void executeUpdate(MongoQuery query){
         
