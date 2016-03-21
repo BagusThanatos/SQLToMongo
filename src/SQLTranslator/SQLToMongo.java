@@ -66,9 +66,9 @@ public class SQLToMongo {
                 fields = new ArrayList();
                 while (!temp.toUpperCase().equals(SQLKeywords.FROM)){
                     if(!temp.equals(SQLKeywords.COMMA)){
-                        fields.add(temp);
+                        fields.add(tokens.get(i).getValue());
                     }
-                    temp=tokens.get(++i).getValue();
+                    temp=tokens.get(++i).getValue().toUpperCase();
                 }    
             }
             String coll = tokens.get(++i).getValue();
