@@ -1,0 +1,419 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package SQLParser;
+
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+/**
+ *
+ * @author BagusThanatos (github.com/BagusThanatos)
+ */
+public class Parser {
+    private ArrayList<TokenLexic> tokens;
+    protected final static ArrayList<String> lexicalName= new ArrayList();
+    protected final static ArrayList<Integer> lexicalCode= new ArrayList();
+    static {
+        lexicalName.add("SELECT");  //1
+        lexicalName.add("*");       //2
+        lexicalName.add("WHERE");   //3
+        lexicalName.add("FROM");    //4
+        lexicalName.add("(");       //5
+        lexicalName.add(")");       //6
+        lexicalName.add(".");       //7
+        lexicalName.add(",");       //8
+        lexicalName.add(";");       //9
+        lexicalName.add("IN");      //10
+        lexicalName.add("AND");     //11
+        lexicalName.add("OR");      //12
+        lexicalName.add("NOT");     //13
+        lexicalName.add(">=");      //14
+        lexicalName.add("=");       //15
+        lexicalName.add("<=");      //16
+        lexicalName.add("<");       //17
+        lexicalName.add(">");       //18
+        lexicalName.add("LIKE");    //19
+        lexicalName.add("UNION");   //20
+        lexicalName.add("JOIN");    //21
+        lexicalName.add("UPDATE");  //
+        lexicalName.add("DELETE");
+        lexicalName.add("INSERT");
+        lexicalName.add("INTO");
+        lexicalName.add("VALUES");
+        lexicalName.add("ALL");
+        lexicalName.add("SET");
+        lexicalName.add("LIKE");
+        lexicalName.add("BETWEEN");
+        
+        for (int i=1;i<=21;i++) lexicalCode.add(i);
+    }
+//    public final static int START=0;
+//    public final static int SELECT=1;
+//    public final static int STAR=2;
+//    public final static int WHERE=3;
+//    public final static int FROM=4;
+//    public final static int KURKA=5;
+//    public final static int KURTUP=6;
+//    public final static int PERIOD=7;
+//    public final static int COMMA=8;
+//    public final static int SEMICOLON=9;
+//    public final static int IN=10;
+//    public final static int AND=11;
+//    public final static int OR=12;
+//    public final static int NOT=13;
+//    public final static int GREATER_EQUAL=14;
+//    public final static int EQUAL=15;
+//    public final static int LESS_EQUAL=16;
+//    public final static int LESS=17;
+//    public final static int GREATER=18;
+//    public final static int LIKE=19;
+//    public final static int UNION=20;
+//    public final static int JOIN=21;
+      public final static int VARIABLE=96;
+      public final static int CONSTANT_STRING=97;
+      public final static int CONSTANT_NUMBER=98;
+//    public final static int INSERT = 26;
+//    public final static int DELETE = 27;
+//    public final static int UPDATE = 28;
+//    public final static int SET = 29;
+//    public final static int VALUES = 30;
+//    public final static int ALL = 31;
+//    public final static int INTO = 30;
+//    
+      public final static int UNIDENTIFIED=99;
+//    public final static int KEYWORDS=10;
+//    public final static int BOOLEANS=12;
+//    public final static int LOGIC_OPERATORS=18;
+//    public final static int SET_OPERATOR=20;
+//    
+    
+    private static final Parser SQLPARSER = makeSQLParser();
+    ArrayList<Node> nodes ;
+    Node currentNode ;
+    JunkNode jN = new JunkNode(this);
+    Node initialNode;
+    void setNode(Node n){
+        this.currentNode = n;
+    }
+    private void setInitialNode(Node initial){
+        this.initialNode=initial;
+    }
+    private void init(){
+        this.currentNode=initialNode;
+    }
+    Node getJunkNode(){
+        return jN;
+    }
+    void addNode(Node n){
+        this.nodes.add(n);
+    }
+    
+    public static Parser getSQLParser(){
+        return SQLPARSER;
+    }
+    private static Parser makeSQLParser(){
+        Parser p= new Parser();
+        
+        NormalNode initial = new NormalNode(p,false);
+        NormalNode select = new NormalNode(p, false);
+        NormalNode insert = new NormalNode(p,false);
+        NormalNode delete = new NormalNode(p,false);
+        NormalNode update = new NormalNode(p,false);
+        NormalNode all = new NormalNode(p, false);
+        NormalNode select_Expr = new NormalNode(p,false);
+        NormalNode from = new NormalNode(p,false);
+        NormalNode table = new NormalNode(p,false);
+        NormalNode semicolon = new NormalNode(p,true);
+        NormalNode where = new NormalNode(p,false);
+        NormalNode into = new NormalNode(p,false);
+        NormalNode commaSelect = new NormalNode(p,false);
+        NormalNode fromDelete = new NormalNode(p,false);
+        NormalNode tableDelete = new NormalNode(p,false);
+        NormalNode tableUpdate = new NormalNode(p,false);
+        NormalNode set = new NormalNode(p,false);
+        NormalNode kolomUpdate = new NormalNode(p,false);
+        NormalNode eqUpdate = new NormalNode(p,false);
+        NormalNode valuesUpdate = new NormalNode(p,false);
+        NormalNode tableInsert = new NormalNode(p,false);
+        NormalNode kurkaInsert = new NormalNode(p,false);
+        NormalNode kolomInsert = new NormalNode(p,false);
+        NormalNode kurtubInsert = new NormalNode(p,false);
+        NormalNode valuesInsert = new NormalNode(p,false);
+        NormalNode kurka2Insert = new NormalNode(p,false);
+        NormalNode kurtub2Insert= new NormalNode(p,false);
+        NormalNode stringAngkaInsert = new NormalNode(p,false);
+        NormalNode angkaWhere = new NormalNode(p,false);
+        NormalNode operator = new NormalNode(p,false);
+        NormalNode operatorKolom = new NormalNode(p,false);
+        NormalNode angkaKolom = new NormalNode(p,false);
+        NormalNode angkaKolomWhere = new NormalNode(p,false);
+        NormalNode stringWhere = new NormalNode(p,false);
+        NormalNode eqWhere = new NormalNode(p,false);
+        NormalNode eq2Where = new NormalNode(p,false);
+        NormalNode string2Where = new NormalNode(p,false);
+        NormalNode stringKolom = new NormalNode(p,false);
+        NormalNode kolom = new NormalNode(p,false);
+        NormalNode like = new NormalNode(p,false);
+        NormalNode stringLike = new NormalNode(p,false);
+        NormalNode between = new NormalNode(p,false);
+        NormalNode num1Between = new NormalNode(p,false);
+        NormalNode andBetween = new NormalNode(p,false);
+        NormalNode num2Between = new NormalNode(p,false);
+        
+        initial.addNext(lexicalName.indexOf("SELECT"), select, null, null);
+        initial.addNext(lexicalName.indexOf("INSERT"), insert, null, null);
+        initial.addNext(lexicalName.indexOf("DELETE"), delete, null, null);
+        initial.addNext(lexicalName.indexOf("UPDATE"), update, null, null);
+        p.setInitialNode(initial);
+        
+        select.addNext(lexicalName.indexOf("ALL"), all, null, null);
+        select.addNext(lexicalName.indexOf("*"), all, null, null);
+        select.addNext(VARIABLE, select_Expr, null, null);
+        
+        all.addNext(lexicalName.indexOf(SQLKeywords.FROM), from, null, null);
+        
+        from.addNext(VARIABLE, table, null, null);
+        
+        select_Expr.addNext(lexicalName.indexOf(SQLKeywords.COMMA), commaSelect, null, null);
+        select_Expr.addNext(lexicalName.indexOf(SQLKeywords.FROM), from, null, null);
+        
+        commaSelect.addNext(VARIABLE, select_Expr, null, null);
+        
+        table.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        table.addNext(lexicalName.indexOf(SQLKeywords.WHERE), where, null, null);
+        
+        where.addNext(CONSTANT_NUMBER, angkaWhere, null, null);
+        where.addNext(CONSTANT_STRING, stringWhere, null, null);
+        where.addNext(VARIABLE, kolom, null, null);
+        
+        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.EQ), operator, null, null);
+        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.GT), operator, null, null);
+        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.GTE), operator, null, null);
+        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.LT), operator, null, null);
+        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.LTE), operator, null, null);
+        
+//        operator.addNext(CONSTANT_NUMBER, angkaKolomWhere, null, null);
+        operator.addNext(VARIABLE, angkaKolomWhere, null, null);
+        
+        angkaKolomWhere.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        angkaKolomWhere.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
+        angkaKolomWhere.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        
+        stringWhere.addNext(lexicalName.indexOf(SQLKeywords.EQ), eqWhere, null, null);
+        
+        eqWhere.addNext(VARIABLE, stringKolom, null, null);
+//        eqWhere.addNext(CONSTANT_STRING, stringKolom, null, null);
+        
+        stringKolom.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        stringKolom.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
+        stringKolom.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        
+        kolom.addNext(lexicalName.indexOf(SQLKeywords.EQ), eq2Where, null, null);
+        kolom.addNext(lexicalName.indexOf(SQLKeywords.LIKE), like, null, null);
+        kolom.addNext(lexicalName.indexOf(SQLKeywords.BETWEEN), between, null, null);
+        kolom.addNext(lexicalName.indexOf(SQLKeywords.GT), operatorKolom, null, null);
+        kolom.addNext(lexicalName.indexOf(SQLKeywords.GTE), operatorKolom, null, null);
+        kolom.addNext(lexicalName.indexOf(SQLKeywords.LT), operatorKolom, null, null);
+        kolom.addNext(lexicalName.indexOf(SQLKeywords.LTE), operatorKolom, null, null);
+        
+        operatorKolom.addNext(CONSTANT_NUMBER, angkaKolom, null, null);
+        
+        angkaKolom.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        angkaKolom.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
+        angkaKolom.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        
+        
+        eq2Where.addNext(CONSTANT_STRING, string2Where, null, null);
+        
+        string2Where.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        string2Where.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
+        string2Where.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        
+        like.addNext(CONSTANT_STRING, stringLike, null,null);
+        
+        stringLike.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        stringLike.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
+        stringLike.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        
+        between.addNext(CONSTANT_NUMBER, num1Between, null, null);
+        
+        num1Between.addNext(lexicalName.indexOf(SQLKeywords.AND), andBetween, null, null);
+        
+        andBetween.addNext(CONSTANT_NUMBER, num2Between, null, null);
+        
+        num2Between.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        num2Between.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
+        num2Between.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        
+        insert.addNext(lexicalName.indexOf(SQLKeywords.INTO), into, null, null);
+        
+        into.addNext(VARIABLE, tableInsert, null, null);
+        
+        tableInsert.addNext(lexicalName.indexOf(SQLKeywords.KURKA), kurkaInsert, null, null);
+        
+        kurkaInsert.addNext(VARIABLE, kolomInsert, null, null);
+        
+        kolomInsert.addNext(lexicalName.indexOf(SQLKeywords.COMMA), kurkaInsert, null, null);
+        kolomInsert.addNext(lexicalName.indexOf(SQLKeywords.KURTUP), kurtubInsert, null, null);
+        
+        kurtubInsert.addNext(lexicalName.indexOf(SQLKeywords.VALUES), valuesInsert, null, null);
+        
+        valuesInsert.addNext(lexicalName.indexOf(SQLKeywords.KURKA), kurka2Insert, null, null);
+        
+        kurka2Insert.addNext(CONSTANT_NUMBER, stringAngkaInsert, null, null);
+        kurka2Insert.addNext(CONSTANT_STRING, stringAngkaInsert, null, null);
+        
+        stringAngkaInsert.addNext(lexicalName.indexOf(SQLKeywords.COMMA), kurka2Insert, null, null);
+        stringAngkaInsert.addNext(lexicalName.indexOf(SQLKeywords.KURTUP), kurtub2Insert, null, null);
+        
+        kurtub2Insert.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        
+        delete.addNext(lexicalName.indexOf(SQLKeywords.FROM), from, null, null);
+        
+        fromDelete.addNext(VARIABLE, tableDelete, null, null);
+        
+        tableDelete.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        tableDelete.addNext(lexicalName.indexOf(SQLKeywords.WHERE), where, null, null);
+        
+        update.addNext(VARIABLE, tableUpdate, null, null);
+        
+        tableUpdate.addNext(lexicalName.indexOf(SQLKeywords.SET), set, null, null);
+        
+        set.addNext(VARIABLE, kolomUpdate, null, null);
+        
+        kolomUpdate.addNext(lexicalName.indexOf(SQLKeywords.EQ), eqUpdate, null, null);
+        
+        eqUpdate.addNext(CONSTANT_NUMBER, valuesUpdate, null, null);
+        eqUpdate.addNext(CONSTANT_STRING, valuesUpdate, null, null);
+        
+        valuesUpdate.addNext(lexicalName.indexOf(SQLKeywords.WHERE), where, null, null);
+        valuesUpdate.addNext(lexicalName.indexOf(SQLKeywords.COMMA), set, null, null);
+        valuesUpdate.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        p.setNode(initial);
+        return p;
+    }
+    public boolean parse(String sql){
+        init();
+        
+        tokens = parseSQL2(sql);
+        for(TokenLexic t: tokens){
+            currentNode.next(t);
+        }
+        
+        return currentNode.isFinalState();
+    }
+    public ArrayList<TokenLexic> getTokens(){
+        return tokens;
+    }
+    private static ArrayList<TokenLexic> parseSQL2(String sql){
+        /*
+        memiliki fungsi yang sama dengan fungsi parseSQL, hanya saja menggunakan StringTokenizer
+        tidak digunakan, hanya saja tidak dihapus sebagai pembanding saja
+        */
+        boolean logical=false;
+        boolean stringWithSpace=false;
+        boolean realNumber=false;
+        String stringRealNumber="";
+        String stringWithSpaceTemp="";
+        String logicalString="";
+        ArrayList<TokenLexic> result = new ArrayList();
+        String temp;
+        sql=sql.replace("\n", " ");
+        sql=sql.replace("\t", " ");
+        StringTokenizer st= new StringTokenizer(sql,"*,.<>=(); ",true);
+        while(st.hasMoreTokens()){
+            temp=st.nextToken();
+            if (stringWithSpace && !temp.contains("\"")) {
+                stringWithSpaceTemp+=temp;
+            }
+            else if (temp.trim().length()>0){
+                if (stringWithSpace) {
+                    if (temp.charAt(temp.length()-1)=='\"') 
+                        result.add(new TokenLexic(CONSTANT_STRING, "Constant String", stringWithSpaceTemp+temp));
+                    else if (temp.contains("\"")) 
+                        result.add(new TokenLexic(UNIDENTIFIED, "Unidentified", stringWithSpaceTemp+" "+temp)); 
+                    /*
+                    else {
+                        stringWithSpaceTemp+=" "+temp;
+                        continue;
+                    }*/
+                    stringWithSpace=false;
+                    stringWithSpaceTemp="";
+                }
+                else if (temp.charAt(0)== '\"' && temp.charAt(temp.length()-1) != '\"') {
+                    stringWithSpace =true;
+                    stringWithSpaceTemp=temp;
+                }
+                else if (temp.charAt(0)== '\"' && temp.charAt(temp.length()-1) == '\"') {
+                    result.add(new TokenLexic(CONSTANT_STRING, "Constant String", temp));
+                }
+                else if (temp.matches("^[0-9]+$")) {
+                    if (realNumber){
+                        result.add(new TokenLexic(CONSTANT_NUMBER,"Constant Number",stringRealNumber+temp));
+                        realNumber=false;
+                        stringRealNumber="";
+                    }
+                    else {
+                        realNumber=true;
+                        stringRealNumber=temp;
+                    }
+                    
+                }
+                else if (temp.equals(".")) {
+                    if (realNumber) stringRealNumber+=".";
+                    else result.add(new TokenLexic(lexicalName.indexOf(temp.toUpperCase()),"",temp));
+                }
+                else if (temp.equals("=")) {
+                    if (logical) {
+                        logical=false;
+                        result.add(new TokenLexic(lexicalName.indexOf(logicalString+temp), "", logicalString+temp));   
+                    }
+                    else 
+                        result.add(new TokenLexic(lexicalName.indexOf("="),"" , "="));
+                    logicalString="";
+                }
+                else if (temp.equals(">")|| temp.equals("<")) {
+                    if (logical){
+                        logical=false;
+                        if (temp.equals(">") || temp.equals("<")){
+                            result.add(new TokenLexic(lexicalName.indexOf(logicalString),"",logicalString));
+                            result.add(new TokenLexic(lexicalName.indexOf(temp),"",temp));
+                        }
+                        logicalString="";
+                    }
+                    else {
+                        logical=true;
+                        logicalString=temp;
+                    }
+                }
+                else if (lexicalName.contains(temp.toUpperCase())) 
+                    result.add(new TokenLexic(lexicalName.indexOf(temp.toUpperCase()),"",temp));
+                else result.add(new TokenLexic(VARIABLE, "Variable" , temp));
+                if (logical && !temp.equals("=") && !temp.equals(">")&& !temp.equals("<")) {
+                    logical= false;
+                    result.add(realNumber || stringWithSpace?result.size():result.size()-2, new TokenLexic(lexicalName.indexOf(logicalString), "", logicalString));
+                    logicalString="";
+                }
+                if (realNumber && !temp.matches("^[0-9]+$") && !temp.equals(".")) {
+                    realNumber=false;
+                    if (stringRealNumber.contains(".")) {
+                        result.add(result.size()-2, new TokenLexic(CONSTANT_NUMBER, "Constant Number", stringRealNumber.substring(0, stringRealNumber.length()-1)));
+                        result.add(result.size()-2, new TokenLexic(lexicalName.indexOf("."), "", "."));
+                    }
+                    else {
+                        result.add(logical?result.size():result.size()-1,new TokenLexic(CONSTANT_NUMBER, "Constant Number", stringRealNumber));
+                    }
+                }
+            }
+        }
+        //if (stringWithSpace) result.add(new TokenLexic(CONSTANT_STRING, "Constant String", stringWithSpaceTemp));
+        if (logical)
+            result.add(new TokenLexic(lexicalName.indexOf(logicalString), "", logicalString));
+        if (realNumber) result.add(new  TokenLexic(CONSTANT_NUMBER, "Constant Number", stringRealNumber));
+        
+        return result;
+    }
+}
