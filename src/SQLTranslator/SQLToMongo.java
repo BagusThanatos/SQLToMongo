@@ -71,6 +71,7 @@ public class SQLToMongo {
                     temp=tokens.get(++i).getValue();
                 }    
             }
+            else i++;
             String coll = tokens.get(++i).getValue();
             temp = tokens.get(++i).getValue().toUpperCase();
             if(temp.equals(SQLKeywords.WHERE)){

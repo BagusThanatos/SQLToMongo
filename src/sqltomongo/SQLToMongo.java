@@ -26,14 +26,14 @@ public class SQLToMongo {
         Parser p = Parser.getSQLParser();
 //        System.out.println(p.parse("\"b\""));
         
-//        System.out.println(p.parse("SELECT nama\n" +
-//"FROM users where status =\"A\" and age > 25;"));
-        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
-"                  age,\n" +
-"                  status)\n" +
-"VALUES (\"bcd001\",\n" +
-"        45,\n" +
-"        \"A\");")+"\n");
+        System.out.println(p.parse("SELECT *\n" +
+"FROM users where status =\"A\" and age > 25;"));
+//        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
+//"                  age,\n" +
+//"                  status)\n" +
+//"VALUES (\"bcd001\",\n" +
+//"        45,\n" +
+//"        \"A\");")+"\n");
 //un-comment baris baris di bawah kalo mau konek ke db
         //MongoDB db = new MongoDB();
         //db.setDatabase("db1");
@@ -67,10 +67,10 @@ public class SQLToMongo {
                 break;
                 
             case INSERT:
-                //db.executeUpdate(query);
+                //db.executeInsert(query);
                 break;
             case UPDATE:
-                //db.execute
+                //db.executeUpdate(query);
                 break;
             default:
                 //db.executeDelete(query);

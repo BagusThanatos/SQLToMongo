@@ -227,7 +227,8 @@ public class Parser {
         
         
         eq2Where.addNext(CONSTANT_STRING, string2Where, null, null);
-        
+        eq2Where.addNext(CONSTANT_NUMBER, string2Where, null, null);
+		
         string2Where.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
         string2Where.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
         string2Where.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
