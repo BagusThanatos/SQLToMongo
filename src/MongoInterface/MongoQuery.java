@@ -14,11 +14,11 @@ import org.bson.conversions.Bson;
  * @author BagusThanatos (github.com/BagusThanatos)
  */
 public class MongoQuery {
-    String collection,query;
-    Type type;
-    Bson cond;
-    Document values;
-    List<String> fields;
+    private String collection,query;
+    private Type type;
+    private Bson cond;
+    private Document values;
+    private List<String> fields;
 
     public static enum Type {
         INSERT,

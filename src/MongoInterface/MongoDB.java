@@ -10,7 +10,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
-import java.util.List;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import org.bson.BsonDocument;
 import org.bson.Document;
 
 /**
@@ -38,11 +40,17 @@ public class MongoDB {
             return result.projection(Projections.include(query.getFields()));
         return result;
     }
-    public void executeUpdate(MongoQuery query){
-        
+    public UpdateResult executeUpdate(MongoQuery query){
+        MongoCollection<Document> collection = md.getCollection(query.getCollection());
+        if (query.getCond()==null) 
+            return collection.updateMany(new BsonDocument(),query.getValues());
+        return collection.updateMany(query.getCond(),query.getValues());
     }
-    public void executeDelete(MongoQuery query){
-        
+    public DeleteResult executeDelete(MongoQuery query){
+        MongoCollection<Document> collection = md.getCollection(query.getCollection());
+        if (query.getCond()==null) 
+            return collection.deleteMany(new BsonDocument());
+        return collection.deleteMany(query.getCond());
     }
     public void executeInsert(MongoQuery query){
         MongoCollection<org.bson.Document> collection = md.getCollection(query.getCollection());

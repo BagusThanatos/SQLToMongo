@@ -8,7 +8,10 @@ package sqltomongo;
 import MongoInterface.MongoDB;
 import MongoInterface.MongoQuery;
 import SQLParser.Parser;
+import SQLParser.TokenLexic;
+import org.bson.BsonString;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 /**
  *
@@ -23,22 +26,37 @@ public class SQLToMongo {
         Parser p = Parser.getSQLParser();
 //        System.out.println(p.parse("\"b\""));
         
-        System.out.println(p.parse("SELECT *\n" +
-"FROM users where status =\"A\";"));
-//        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
-//"                  age,\n" +
-//"                  status)\n" +
-//"VALUES (\"bcd001\",\n" +
-//"        45,\n" +
-//"        \"A\");")+"\n");
+//        System.out.println(p.parse("SELECT nama\n" +
+//"FROM users where status =\"A\" and age > 25;"));
+        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
+"                  age,\n" +
+"                  status)\n" +
+"VALUES (\"bcd001\",\n" +
+"        45,\n" +
+"        \"A\");")+"\n");
 //un-comment baris baris di bawah kalo mau konek ke db
         //MongoDB db = new MongoDB();
         //db.setDatabase("db1");
         SQLTranslator.SQLToMongo sqlToMongo = new SQLTranslator.SQLToMongo();
         MongoQuery query = sqlToMongo.translate(p.getTokens());
         System.out.println(p.getTokens().toString());
-        System.out.println(query.getFields().toString());
-        System.out.println(query.getCond());
+        for(TokenLexic t : p.getTokens()){
+            System.out.print(t.getTokenCode()+", ");
+        }
+        System.out.println();
+        if(query.getFields()!=null) 
+            System.out.println("Fields : "+query.getFields().toString());
+        if (query.getCond()!=null)
+            System.out.println("Condition : "+query.getCond());
+        if (query.getValues()!=null) {
+            System.out.println("Values : ");
+            Document v = query.getValues();
+            for (String s : v.keySet()){
+                System.out.println(v.get(s));
+            }
+        }
+        System.out.println("Collection : "+query.getCollection());
+        System.out.println("Type : "+query.getType());
         if (null!=query.getType()) switch (query.getType()) {
             case SELECT:
                 //        for(Document d : db.executeQuery(query)){

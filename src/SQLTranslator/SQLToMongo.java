@@ -25,14 +25,14 @@ public class SQLToMongo {
     public MongoQuery translate(ArrayList<TokenLexic> tokens){
         String mongo=null;
         MongoQuery query = new MongoQuery();
-        String type = tokens.get(0).getValue();
-        if (type.toUpperCase().equals(SQLKeywords.INSERT)){
+        String type = tokens.get(0).getValue().toUpperCase();
+        if (type.equals(SQLKeywords.INSERT)){
             String collection = tokens.get(2).getValue();
             ArrayList<String> fields = new ArrayList(), values = new ArrayList();
             boolean value = false;
             for (int i=4; i< tokens.size();i++){
                 String temp = tokens.get(i).getValue();
-                if (temp.equals(SQLKeywords.VALUES)) value = true;
+                if (temp.toUpperCase().equals(SQLKeywords.VALUES)) value = true;
                 else {
                     if (!(temp.equals(SQLKeywords.COMMA) || 
                             temp.equals(SQLKeywords.KURTUP) ||
@@ -46,7 +46,7 @@ public class SQLToMongo {
             mongo = "db."+collection+".insert({";
             mongo += fields.get(0)+": "+values.get(0);
             Document doc = new Document();
-            for(int i =1 ;i<fields.size();i++){
+            for(int i =0 ;i<fields.size();i++){
                 mongo +=","+fields.get(i)+": "+values.get(i);
                 doc.append(fields.get(i), values.get(i));
             }
@@ -81,8 +81,36 @@ public class SQLToMongo {
             query.setCond(cond);
             query.setType(MongoQuery.Type.SELECT);
         }
+        else if(type.equals(SQLKeywords.UPDATE)){
+            String coll = tokens.get(1).getValue();
+            int i = 3;
+            Document doc = new Document();
+            Bson cond = null;
+            String temp = tokens.get(i).getValue();
+            while(!temp.toUpperCase().equals(SQLKeywords.WHERE) && !temp.equals(";")){
+                String value =tokens.get(i+2).getValue();
+                doc = doc.append("$set", new Document(temp,value));
+                i+=3;
+                temp = tokens.get(i).getValue();
+            }
+            if(temp.toUpperCase().equals(SQLKeywords.WHERE)){
+                cond = translateWhere(tokens, i+1);
+            }
+            query.setCollection(coll);
+            query.setCond(cond);
+            query.setValues(doc);
+            query.setType(MongoQuery.Type.UPDATE);
+        }
+        else if (type.equals(SQLKeywords.DELETE)){
+            String coll = tokens.get(2).getValue();
+            Bson cond = null;
+            if (tokens.get(3).getValue().toUpperCase().equals(SQLKeywords.WHERE))
+                cond = translateWhere(tokens, 4);
+            query.setCollection(coll);
+            query.setCond(cond);
+            query.setType(MongoQuery.Type.DELETE);
+        }
             
-        
         return query;
     }
     private Bson translateWhere(List<TokenLexic> token,int i){
