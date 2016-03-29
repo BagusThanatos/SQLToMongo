@@ -22,10 +22,17 @@ import org.bson.Document;
 public class MongoDB {
     MongoClient mc;
     MongoDatabase md;
-    public MongoDB(){
+    private static MongoDB db= new MongoDB();
+    private MongoDB(){
         mc = new MongoClient();
     }
     
+    private MongoDB(String url){
+        mc = new MongoClient(url);
+    }
+    public static MongoDB getDatabaseConnection(){
+        return db;
+    }
     public void setDatabase(String db){
         this.md = mc.getDatabase(db);
     }

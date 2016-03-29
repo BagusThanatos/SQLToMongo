@@ -14,41 +14,41 @@ import java.util.StringTokenizer;
  */
 public class Parser {
     private ArrayList<TokenLexic> tokens;
-    protected final static ArrayList<String> lexicalName= new ArrayList();
-    protected final static ArrayList<Integer> lexicalCode= new ArrayList();
+    protected final static ArrayList<String> LEXICALNAME= new ArrayList();
+    protected final static ArrayList<Integer> LEXICALCODE= new ArrayList();
     static {
-        lexicalName.add("SELECT");  //1
-        lexicalName.add("*");       //2
-        lexicalName.add("WHERE");   //3
-        lexicalName.add("FROM");    //4
-        lexicalName.add("(");       //5
-        lexicalName.add(")");       //6
-        lexicalName.add(".");       //7
-        lexicalName.add(",");       //8
-        lexicalName.add(";");       //9
-        lexicalName.add("IN");      //10
-        lexicalName.add("AND");     //11
-        lexicalName.add("OR");      //12
-        lexicalName.add("NOT");     //13
-        lexicalName.add(">=");      //14
-        lexicalName.add("=");       //15
-        lexicalName.add("<=");      //16
-        lexicalName.add("<");       //17
-        lexicalName.add(">");       //18
-        lexicalName.add("LIKE");    //19
-        lexicalName.add("UNION");   //20
-        lexicalName.add("JOIN");    //21
-        lexicalName.add("UPDATE");  //
-        lexicalName.add("DELETE");
-        lexicalName.add("INSERT");
-        lexicalName.add("INTO");
-        lexicalName.add("VALUES");
-        lexicalName.add("ALL");
-        lexicalName.add("SET");
-        lexicalName.add("LIKE");
-        lexicalName.add("BETWEEN");
+        LEXICALNAME.add("SELECT");  //1
+        LEXICALNAME.add("*");       //2
+        LEXICALNAME.add("WHERE");   //3
+        LEXICALNAME.add("FROM");    //4
+        LEXICALNAME.add("(");       //5
+        LEXICALNAME.add(")");       //6
+        LEXICALNAME.add(".");       //7
+        LEXICALNAME.add(",");       //8
+        LEXICALNAME.add(";");       //9
+        LEXICALNAME.add("IN");      //10
+        LEXICALNAME.add("AND");     //11
+        LEXICALNAME.add("OR");      //12
+        LEXICALNAME.add("NOT");     //13
+        LEXICALNAME.add(">=");      //14
+        LEXICALNAME.add("=");       //15
+        LEXICALNAME.add("<=");      //16
+        LEXICALNAME.add("<");       //17
+        LEXICALNAME.add(">");       //18
+        LEXICALNAME.add("LIKE");    //19
+        LEXICALNAME.add("UNION");   //20
+        LEXICALNAME.add("JOIN");    //21
+        LEXICALNAME.add("UPDATE");  //
+        LEXICALNAME.add("DELETE");
+        LEXICALNAME.add("INSERT");
+        LEXICALNAME.add("INTO");
+        LEXICALNAME.add("VALUES");
+        LEXICALNAME.add("ALL");
+        LEXICALNAME.add("SET");
+        LEXICALNAME.add("LIKE");
+        LEXICALNAME.add("BETWEEN");
         
-        for (int i=1;i<=21;i++) lexicalCode.add(i);
+        for (int i=1;i<=21;i++) LEXICALCODE.add(i);
     }
 //    public final static int START=0;
 //    public final static int SELECT=1;
@@ -95,6 +95,9 @@ public class Parser {
     Node currentNode ;
     JunkNode jN = new JunkNode(this);
     Node initialNode;
+    private Parser(){
+        
+    }
     void setNode(Node n){
         this.currentNode = n;
     }
@@ -163,136 +166,136 @@ public class Parser {
         NormalNode andBetween = new NormalNode(p,false);
         NormalNode num2Between = new NormalNode(p,false);
         
-        initial.addNext(lexicalName.indexOf("SELECT"), select, null, null);
-        initial.addNext(lexicalName.indexOf("INSERT"), insert, null, null);
-        initial.addNext(lexicalName.indexOf("DELETE"), delete, null, null);
-        initial.addNext(lexicalName.indexOf("UPDATE"), update, null, null);
+        initial.addNext(LEXICALNAME.indexOf("SELECT"), select, null, null);
+        initial.addNext(LEXICALNAME.indexOf("INSERT"), insert, null, null);
+        initial.addNext(LEXICALNAME.indexOf("DELETE"), delete, null, null);
+        initial.addNext(LEXICALNAME.indexOf("UPDATE"), update, null, null);
         p.setInitialNode(initial);
         
-        select.addNext(lexicalName.indexOf("ALL"), all, null, null);
-        select.addNext(lexicalName.indexOf("*"), all, null, null);
+        select.addNext(LEXICALNAME.indexOf("ALL"), all, null, null);
+        select.addNext(LEXICALNAME.indexOf("*"), all, null, null);
         select.addNext(VARIABLE, select_Expr, null, null);
         
-        all.addNext(lexicalName.indexOf(SQLKeywords.FROM), from, null, null);
+        all.addNext(LEXICALNAME.indexOf(SQLKeywords.FROM), from, null, null);
         
         from.addNext(VARIABLE, table, null, null);
         
-        select_Expr.addNext(lexicalName.indexOf(SQLKeywords.COMMA), commaSelect, null, null);
-        select_Expr.addNext(lexicalName.indexOf(SQLKeywords.FROM), from, null, null);
+        select_Expr.addNext(LEXICALNAME.indexOf(SQLKeywords.COMMA), commaSelect, null, null);
+        select_Expr.addNext(LEXICALNAME.indexOf(SQLKeywords.FROM), from, null, null);
         
         commaSelect.addNext(VARIABLE, select_Expr, null, null);
         
-        table.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        table.addNext(lexicalName.indexOf(SQLKeywords.WHERE), where, null, null);
+        table.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        table.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
         
         where.addNext(CONSTANT_NUMBER, angkaWhere, null, null);
         where.addNext(CONSTANT_STRING, stringWhere, null, null);
         where.addNext(VARIABLE, kolom, null, null);
         
-        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.EQ), operator, null, null);
-        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.GT), operator, null, null);
-        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.GTE), operator, null, null);
-        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.LT), operator, null, null);
-        angkaWhere.addNext(lexicalName.indexOf(SQLKeywords.LTE), operator, null, null);
+        angkaWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.EQ), operator, null, null);
+        angkaWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.GT), operator, null, null);
+        angkaWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.GTE), operator, null, null);
+        angkaWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.LT), operator, null, null);
+        angkaWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.LTE), operator, null, null);
         
 //        operator.addNext(CONSTANT_NUMBER, angkaKolomWhere, null, null);
         operator.addNext(VARIABLE, angkaKolomWhere, null, null);
         
-        angkaKolomWhere.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        angkaKolomWhere.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
-        angkaKolomWhere.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
+        angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
-        stringWhere.addNext(lexicalName.indexOf(SQLKeywords.EQ), eqWhere, null, null);
+        stringWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.EQ), eqWhere, null, null);
         
         eqWhere.addNext(VARIABLE, stringKolom, null, null);
 //        eqWhere.addNext(CONSTANT_STRING, stringKolom, null, null);
         
-        stringKolom.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        stringKolom.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
-        stringKolom.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
+        stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
-        kolom.addNext(lexicalName.indexOf(SQLKeywords.EQ), eq2Where, null, null);
-        kolom.addNext(lexicalName.indexOf(SQLKeywords.LIKE), like, null, null);
-        kolom.addNext(lexicalName.indexOf(SQLKeywords.BETWEEN), between, null, null);
-        kolom.addNext(lexicalName.indexOf(SQLKeywords.GT), operatorKolom, null, null);
-        kolom.addNext(lexicalName.indexOf(SQLKeywords.GTE), operatorKolom, null, null);
-        kolom.addNext(lexicalName.indexOf(SQLKeywords.LT), operatorKolom, null, null);
-        kolom.addNext(lexicalName.indexOf(SQLKeywords.LTE), operatorKolom, null, null);
+        kolom.addNext(LEXICALNAME.indexOf(SQLKeywords.EQ), eq2Where, null, null);
+        kolom.addNext(LEXICALNAME.indexOf(SQLKeywords.LIKE), like, null, null);
+        kolom.addNext(LEXICALNAME.indexOf(SQLKeywords.BETWEEN), between, null, null);
+        kolom.addNext(LEXICALNAME.indexOf(SQLKeywords.GT), operatorKolom, null, null);
+        kolom.addNext(LEXICALNAME.indexOf(SQLKeywords.GTE), operatorKolom, null, null);
+        kolom.addNext(LEXICALNAME.indexOf(SQLKeywords.LT), operatorKolom, null, null);
+        kolom.addNext(LEXICALNAME.indexOf(SQLKeywords.LTE), operatorKolom, null, null);
         
         operatorKolom.addNext(CONSTANT_NUMBER, angkaKolom, null, null);
         
-        angkaKolom.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        angkaKolom.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
-        angkaKolom.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
+        angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
         
         eq2Where.addNext(CONSTANT_STRING, string2Where, null, null);
         eq2Where.addNext(CONSTANT_NUMBER, string2Where, null, null);
 		
-        string2Where.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        string2Where.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
-        string2Where.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
+        string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
         like.addNext(CONSTANT_STRING, stringLike, null,null);
         
-        stringLike.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        stringLike.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
-        stringLike.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
+        stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
         between.addNext(CONSTANT_NUMBER, num1Between, null, null);
         
-        num1Between.addNext(lexicalName.indexOf(SQLKeywords.AND), andBetween, null, null);
+        num1Between.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), andBetween, null, null);
         
         andBetween.addNext(CONSTANT_NUMBER, num2Between, null, null);
         
-        num2Between.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        num2Between.addNext(lexicalName.indexOf(SQLKeywords.AND), where, null, null);
-        num2Between.addNext(lexicalName.indexOf(SQLKeywords.OR), where, null, null);
+        num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
+        num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
-        insert.addNext(lexicalName.indexOf(SQLKeywords.INTO), into, null, null);
+        insert.addNext(LEXICALNAME.indexOf(SQLKeywords.INTO), into, null, null);
         
         into.addNext(VARIABLE, tableInsert, null, null);
         
-        tableInsert.addNext(lexicalName.indexOf(SQLKeywords.KURKA), kurkaInsert, null, null);
+        tableInsert.addNext(LEXICALNAME.indexOf(SQLKeywords.KURKA), kurkaInsert, null, null);
         
         kurkaInsert.addNext(VARIABLE, kolomInsert, null, null);
         
-        kolomInsert.addNext(lexicalName.indexOf(SQLKeywords.COMMA), kurkaInsert, null, null);
-        kolomInsert.addNext(lexicalName.indexOf(SQLKeywords.KURTUP), kurtubInsert, null, null);
+        kolomInsert.addNext(LEXICALNAME.indexOf(SQLKeywords.COMMA), kurkaInsert, null, null);
+        kolomInsert.addNext(LEXICALNAME.indexOf(SQLKeywords.KURTUP), kurtubInsert, null, null);
         
-        kurtubInsert.addNext(lexicalName.indexOf(SQLKeywords.VALUES), valuesInsert, null, null);
+        kurtubInsert.addNext(LEXICALNAME.indexOf(SQLKeywords.VALUES), valuesInsert, null, null);
         
-        valuesInsert.addNext(lexicalName.indexOf(SQLKeywords.KURKA), kurka2Insert, null, null);
+        valuesInsert.addNext(LEXICALNAME.indexOf(SQLKeywords.KURKA), kurka2Insert, null, null);
         
         kurka2Insert.addNext(CONSTANT_NUMBER, stringAngkaInsert, null, null);
         kurka2Insert.addNext(CONSTANT_STRING, stringAngkaInsert, null, null);
         
-        stringAngkaInsert.addNext(lexicalName.indexOf(SQLKeywords.COMMA), kurka2Insert, null, null);
-        stringAngkaInsert.addNext(lexicalName.indexOf(SQLKeywords.KURTUP), kurtub2Insert, null, null);
+        stringAngkaInsert.addNext(LEXICALNAME.indexOf(SQLKeywords.COMMA), kurka2Insert, null, null);
+        stringAngkaInsert.addNext(LEXICALNAME.indexOf(SQLKeywords.KURTUP), kurtub2Insert, null, null);
         
-        kurtub2Insert.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        kurtub2Insert.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
         
-        delete.addNext(lexicalName.indexOf(SQLKeywords.FROM), from, null, null);
+        delete.addNext(LEXICALNAME.indexOf(SQLKeywords.FROM), from, null, null);
         
         fromDelete.addNext(VARIABLE, tableDelete, null, null);
         
-        tableDelete.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        tableDelete.addNext(lexicalName.indexOf(SQLKeywords.WHERE), where, null, null);
+        tableDelete.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        tableDelete.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
         
         update.addNext(VARIABLE, tableUpdate, null, null);
         
-        tableUpdate.addNext(lexicalName.indexOf(SQLKeywords.SET), set, null, null);
+        tableUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.SET), set, null, null);
         
         set.addNext(VARIABLE, kolomUpdate, null, null);
         
-        kolomUpdate.addNext(lexicalName.indexOf(SQLKeywords.EQ), eqUpdate, null, null);
+        kolomUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.EQ), eqUpdate, null, null);
         
         eqUpdate.addNext(CONSTANT_NUMBER, valuesUpdate, null, null);
         eqUpdate.addNext(CONSTANT_STRING, valuesUpdate, null, null);
         
-        valuesUpdate.addNext(lexicalName.indexOf(SQLKeywords.WHERE), where, null, null);
-        valuesUpdate.addNext(lexicalName.indexOf(SQLKeywords.COMMA), set, null, null);
-        valuesUpdate.addNext(lexicalName.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        valuesUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
+        valuesUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.COMMA), set, null, null);
+        valuesUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
         p.setNode(initial);
         return p;
     }
@@ -365,23 +368,23 @@ public class Parser {
                 }
                 else if (temp.equals(".")) {
                     if (realNumber) stringRealNumber+=".";
-                    else result.add(new TokenLexic(lexicalName.indexOf(temp.toUpperCase()),"",temp));
+                    else result.add(new TokenLexic(LEXICALNAME.indexOf(temp.toUpperCase()),"",temp));
                 }
                 else if (temp.equals("=")) {
                     if (logical) {
                         logical=false;
-                        result.add(new TokenLexic(lexicalName.indexOf(logicalString+temp), "", logicalString+temp));   
+                        result.add(new TokenLexic(LEXICALNAME.indexOf(logicalString+temp), "", logicalString+temp));   
                     }
                     else 
-                        result.add(new TokenLexic(lexicalName.indexOf("="),"" , "="));
+                        result.add(new TokenLexic(LEXICALNAME.indexOf("="),"" , "="));
                     logicalString="";
                 }
                 else if (temp.equals(">")|| temp.equals("<")) {
                     if (logical){
                         logical=false;
                         if (temp.equals(">") || temp.equals("<")){
-                            result.add(new TokenLexic(lexicalName.indexOf(logicalString),"",logicalString));
-                            result.add(new TokenLexic(lexicalName.indexOf(temp),"",temp));
+                            result.add(new TokenLexic(LEXICALNAME.indexOf(logicalString),"",logicalString));
+                            result.add(new TokenLexic(LEXICALNAME.indexOf(temp),"",temp));
                         }
                         logicalString="";
                     }
@@ -390,19 +393,19 @@ public class Parser {
                         logicalString=temp;
                     }
                 }
-                else if (lexicalName.contains(temp.toUpperCase())) 
-                    result.add(new TokenLexic(lexicalName.indexOf(temp.toUpperCase()),"",temp));
+                else if (LEXICALNAME.contains(temp.toUpperCase())) 
+                    result.add(new TokenLexic(LEXICALNAME.indexOf(temp.toUpperCase()),"",temp));
                 else result.add(new TokenLexic(VARIABLE, "Variable" , temp));
                 if (logical && !temp.equals("=") && !temp.equals(">")&& !temp.equals("<")) {
                     logical= false;
-                    result.add(realNumber || stringWithSpace?result.size():result.size()-2, new TokenLexic(lexicalName.indexOf(logicalString), "", logicalString));
+                    result.add(realNumber || stringWithSpace?result.size():result.size()-2, new TokenLexic(LEXICALNAME.indexOf(logicalString), "", logicalString));
                     logicalString="";
                 }
                 if (realNumber && !temp.matches("^[0-9]+$") && !temp.equals(".")) {
                     realNumber=false;
                     if (stringRealNumber.contains(".")) {
                         result.add(result.size()-2, new TokenLexic(CONSTANT_NUMBER, "Constant Number", stringRealNumber.substring(0, stringRealNumber.length()-1)));
-                        result.add(result.size()-2, new TokenLexic(lexicalName.indexOf("."), "", "."));
+                        result.add(result.size()-2, new TokenLexic(LEXICALNAME.indexOf("."), "", "."));
                     }
                     else {
                         result.add(logical?result.size():result.size()-1,new TokenLexic(CONSTANT_NUMBER, "Constant Number", stringRealNumber));
@@ -412,7 +415,7 @@ public class Parser {
         }
         //if (stringWithSpace) result.add(new TokenLexic(CONSTANT_STRING, "Constant String", stringWithSpaceTemp));
         if (logical)
-            result.add(new TokenLexic(lexicalName.indexOf(logicalString), "", logicalString));
+            result.add(new TokenLexic(LEXICALNAME.indexOf(logicalString), "", logicalString));
         if (realNumber) result.add(new  TokenLexic(CONSTANT_NUMBER, "Constant Number", stringRealNumber));
         
         return result;

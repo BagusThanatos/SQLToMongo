@@ -5,7 +5,6 @@
  */
 package SQLTranslator;
 
-import MongoInterface.MongoDB;
 import MongoInterface.MongoQuery;
 import SQLParser.Parser;
 import SQLParser.SQLKeywords;
@@ -23,7 +22,7 @@ import org.bson.conversions.Bson;
  */
 public class SQLToMongo {
     public MongoQuery translate(ArrayList<TokenLexic> tokens){
-        String mongo=null;
+        String mongo;
         MongoQuery query = new MongoQuery();
         String type = tokens.get(0).getValue().toUpperCase();
         if (type.equals(SQLKeywords.INSERT)){
