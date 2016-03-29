@@ -9,6 +9,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -66,4 +67,8 @@ public class MongoDB {
     public void close(){
         mc.close();
     }
+    public MongoIterable<String> getDatabaseList(){
+      return mc.listDatabaseNames();
+    }
+    
 }
