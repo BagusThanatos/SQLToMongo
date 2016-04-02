@@ -27,7 +27,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         this.translator = new SQLToMongo();
         this.p = Parser.getSQLParser();
-        refreshListDB();
+        //refreshListDB();
     }
 
     /**
@@ -202,8 +202,9 @@ public class Main extends javax.swing.JFrame {
     private void buttExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttExecuteActionPerformed
         boolean valid = setValid();
         if(valid){
-            Thread t = new Thread(new TranslatorThread(this, p.getTokens()));
-            t.start();
+          textResultSet.setText("");
+          Thread t = new Thread(new TranslatorThread(this, p.getTokens()));
+          t.start();
         }
     }//GEN-LAST:event_buttExecuteActionPerformed
 
