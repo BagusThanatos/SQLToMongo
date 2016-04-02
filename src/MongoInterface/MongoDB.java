@@ -28,9 +28,6 @@ public class MongoDB {
         mc = new MongoClient();
     }
     
-    private MongoDB(String url){
-        mc = new MongoClient(url);
-    }
     public static MongoDB getDatabaseConnection(){
         return db;
     }

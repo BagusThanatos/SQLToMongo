@@ -21,12 +21,10 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    MongoDB db;
     SQLToMongo translator;
     Parser p;
     public Main() {
         initComponents();
-        //this.db = new MongoDB();
         this.translator = new SQLToMongo();
         this.p = Parser.getSQLParser();
         refreshListDB();
@@ -63,6 +61,11 @@ public class Main extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("SQLToMongo");
+    addWindowListener(new java.awt.event.WindowAdapter() {
+      public void windowClosing(java.awt.event.WindowEvent evt) {
+        formWindowClosing(evt);
+      }
+    });
 
     textInputQuery.setColumns(20);
     textInputQuery.setRows(5);
@@ -220,6 +223,10 @@ public class Main extends javax.swing.JFrame {
   private void butSetDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butSetDBActionPerformed
     setDB();
   }//GEN-LAST:event_butSetDBActionPerformed
+
+  private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    MongoDB.getDatabaseConnection().close();
+  }//GEN-LAST:event_formWindowClosing
 
   private void setDB(){
     if (comboDatabases.getSelectedIndex()>0){
