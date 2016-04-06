@@ -30,7 +30,8 @@ public class SQLToMongo {
         String type = tokens.get(0).getValue().toUpperCase();
         if (type.equals(SQLKeywords.INSERT)){
             String collection = tokens.get(2).getValue();
-            ArrayList<String> fields = new ArrayList(), values = new ArrayList();
+            ArrayList<String> fields = new ArrayList();
+            ArrayList<Object> values = new ArrayList();
             boolean value = false;
             for (i=4; i< tokens.size();i++){
                 String temp = tokens.get(i).getValue();
@@ -39,8 +40,17 @@ public class SQLToMongo {
                     if (!(temp.equals(SQLKeywords.COMMA) || 
                             temp.equals(SQLKeywords.KURTUP) ||
                             temp.equals(SQLKeywords.KURKA)|| temp.equals(SQLKeywords.SEMICOLON))) {
-                        if(value) values.add(temp);
-                        else fields.add(temp);
+                        if(value) {
+                          Object t=temp;
+                          int code = tokens.get(i).getTokenCode();
+                          if(code == Parser.CONSTANT_NUMBER) 
+                            t= new Integer(temp);
+                          
+                          values.add(t);
+                        }
+                        else 
+                          fields.add(temp);
+                        
                     } 
                         
                 }
@@ -75,16 +85,21 @@ public class SQLToMongo {
             }
             else i++;
             String coll = tokens.get(++i).getValue();
-            temp = tokens.get(++i).getValue().toUpperCase();
-            if(temp.equals(SQLKeywords.WHERE)){
+            if (++i < tokens.size()) {
+              temp = tokens.get(i).getValue().toUpperCase();
+              if(temp.equals(SQLKeywords.WHERE)){
                 i++;
                 cond= translateWhere(tokens);
+              }
             }
-            if(tokens.get(i).getValue().toUpperCase().equals("ORDER")){
-              query.setOrderField(tokens.get(++i).getValue());
-              query.setOrder(true);
-              temp = tokens.get(++i).getValue().toUpperCase();
-              query.setAsc(temp.equals("ASC"));
+            if(i < tokens.size()){
+              if(tokens.get(i).getValue().toUpperCase().equals("BY")){
+                i+=1;
+                query.setOrderField(tokens.get(i).getValue());
+                query.setOrder(true);
+                temp = tokens.get(++i).getValue().toUpperCase();
+                query.setAsc(temp.equals("ASC"));
+              }
             }
             query.setFields(fields);
             query.setCollection(coll);
@@ -141,22 +156,25 @@ public class SQLToMongo {
             TokenLexic temp2 = token.get(i+2);
             String valueT1 = temp1.getValue();
             String valueT2 = temp2.getValue();
+            String val1, val2;
             boolean var1 = temp1.getTokenCode()==Parser.VARIABLE;
+            if (var1) {
+              val1 = valueT1;
+              val2 = valueT2;
+            } else {
+              val1 = valueT2;
+              val2 = valueT1;
+            }
             if (temp.equals(SQLKeywords.EQ)){
-                if (var1) d = eq(valueT1,valueT2);
-                else d = eq(valueT2, valueT1);
+                d= eq(val1,new Integer(val2));
             } else if (temp.equals(SQLKeywords.GTE)){
-                if (var1) d = gte(valueT1,valueT2);
-                else d = gte(valueT2, valueT1);
+                d=gte(val1,new Integer(val2));
             } else if (temp.equals(SQLKeywords.LTE)){
-                if (var1) d = lte(valueT1,valueT2);
-                else d = lte(valueT2, valueT1);
+                d=lte(val1,new Integer(val2));
             } else if (temp.equals(SQLKeywords.LT)){
-                if (var1) d = lt(valueT1,valueT2);
-                else d = lt(valueT2, valueT1);
+                d=lt(val1,new Integer(val2));
             } else if (temp.equals(SQLKeywords.GT)){
-                if (var1) d = gt(valueT1,valueT2);
-                else d = gt(valueT2, valueT1);
+                d=gt(val1,new Integer(val2));
             } else if (temp.equals(SQLKeywords.LIKE)){
                 if(valueT2.charAt(0)=='%')
                     valueT2 = "/"+valueT2.substring(1);

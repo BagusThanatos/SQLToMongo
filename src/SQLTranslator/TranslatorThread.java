@@ -57,6 +57,6 @@ public class TranslatorThread implements Runnable{
                 break;
         }
         finish = System.nanoTime();
-        m.appendResult("Execution time : "+(finish -start)/1000+" ms");
+        m.appendResult("Execution time : "+(finish -start)/1000000+" ms");
     }
 }
