@@ -21,7 +21,10 @@ import org.bson.conversions.Bson;
  * @author BagusThanatos (github.com/BagusThanatos)
  */
 public class SQLToMongo {
+    private int i ;
+    
     public MongoQuery translate(ArrayList<TokenLexic> tokens){
+        i=0;
         String mongo;
         MongoQuery query = new MongoQuery();
         String type = tokens.get(0).getValue().toUpperCase();
@@ -29,7 +32,7 @@ public class SQLToMongo {
             String collection = tokens.get(2).getValue();
             ArrayList<String> fields = new ArrayList(), values = new ArrayList();
             boolean value = false;
-            for (int i=4; i< tokens.size();i++){
+            for (i=4; i< tokens.size();i++){
                 String temp = tokens.get(i).getValue();
                 if (temp.toUpperCase().equals(SQLKeywords.VALUES)) value = true;
                 else {
@@ -59,7 +62,7 @@ public class SQLToMongo {
             String temp = tokens.get(1).getValue().toUpperCase();
             List<String> fields=null;
             Bson cond = null;
-            int i =1;
+            i =1;
             if(!temp.equals("ALL")&& !temp.equals("*")){
                 temp = tokens.get(i).getValue();
                 fields = new ArrayList();
@@ -74,7 +77,12 @@ public class SQLToMongo {
             String coll = tokens.get(++i).getValue();
             temp = tokens.get(++i).getValue().toUpperCase();
             if(temp.equals(SQLKeywords.WHERE)){
-                cond= translateWhere(tokens, i+1);
+                i++;
+                cond= translateWhere(tokens);
+            }
+            if(tokens.get(i).getValue().toUpperCase().equals("ORDER")){
+              query.setOrderField(tokens.get(++i).getValue());
+              query.setOrder(true);
             }
             query.setFields(fields);
             query.setCollection(coll);
@@ -94,7 +102,8 @@ public class SQLToMongo {
                 temp = tokens.get(i).getValue();
             }
             if(temp.toUpperCase().equals(SQLKeywords.WHERE)){
-                cond = translateWhere(tokens, i+1);
+              i++;  
+              cond = translateWhere(tokens);
             }
             query.setCollection(coll);
             query.setCond(cond);
@@ -104,8 +113,10 @@ public class SQLToMongo {
         else if (type.equals(SQLKeywords.DELETE)){
             String coll = tokens.get(2).getValue();
             Bson cond = null;
-            if (tokens.get(3).getValue().toUpperCase().equals(SQLKeywords.WHERE))
-                cond = translateWhere(tokens, 4);
+            if (tokens.get(3).getValue().toUpperCase().equals(SQLKeywords.WHERE)) {
+              i=4;
+              cond = translateWhere(tokens);
+            }
             query.setCollection(coll);
             query.setCond(cond);
             query.setType(MongoQuery.Type.DELETE);
@@ -113,7 +124,7 @@ public class SQLToMongo {
             
         return query;
     }
-    private Bson translateWhere(List<TokenLexic> token,int i){
+    private Bson translateWhere(List<TokenLexic> token){
         Bson d = null;
  //       while(i<token.size()){
         String temp = token.get(i+1).getValue().toUpperCase();
@@ -155,12 +166,12 @@ public class SQLToMongo {
             } 
             i+=3;
         }
-        temp = token.get(i).getValue().toUpperCase();
+        temp = token.get(i++).getValue().toUpperCase();
         if(temp.equals(SQLKeywords.AND) ){
-            d= and(d,translateWhere(token, i+1));
+            d= and(d,translateWhere(token));
         }
         else if (temp.equals(SQLKeywords.OR))
-            d = or(d, translateWhere(token, i+1));
+            d = or(d, translateWhere(token));
      //   }
         return d;
     }

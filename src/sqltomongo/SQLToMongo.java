@@ -27,7 +27,7 @@ public class SQLToMongo {
 //        System.out.println(p.parse("\"b\""));
         
         System.out.println(p.parse("SELECT *\n" +
-"FROM users where status =\"A\" and age > 25;"));
+"FROM users where status =\"A\" and age > 25 order by id;"));
 //        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
 //"                  age,\n" +
 //"                  status)\n" +
@@ -47,7 +47,7 @@ public class SQLToMongo {
         if(query.getFields()!=null) 
             System.out.println("Fields : "+query.getFields().toString());
         if (query.getCond()!=null)
-            System.out.println("Condition : "+query.getCond());
+            System.out.println("Condition : "+query.getCond().toString());
         if (query.getValues()!=null) {
             System.out.println("Values : ");
             Document v = query.getValues();

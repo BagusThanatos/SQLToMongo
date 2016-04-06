@@ -14,12 +14,14 @@ import org.bson.conversions.Bson;
  * @author BagusThanatos (github.com/BagusThanatos)
  */
 public class MongoQuery {
-    private String collection,query;
+    private String collection,query,orderField;
     private Type type;
     private Bson cond;
     private Document values;
     private List<String> fields;
+    private boolean order;
 
+ 
     public static enum Type {
         INSERT,
         SELECT,
@@ -27,10 +29,27 @@ public class MongoQuery {
         DELETE
     }
     
+    public MongoQuery(){
+      this.order = false;
+    }
     public String getCollection() {
         return collection;
     }
 
+  public String getOrderField() {
+    return orderField;
+  }
+  public void setOrder(boolean b){
+    this.order= b;
+  }
+
+  public void setOrderField(String orderField) {
+    this.orderField = orderField;
+  }
+
+    public boolean isOrder() {
+      return order;
+    }
     public Type getType() {
         return type;
     }

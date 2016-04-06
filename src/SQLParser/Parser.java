@@ -6,6 +6,7 @@
 package SQLParser;
 
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 /**
@@ -14,8 +15,9 @@ import java.util.StringTokenizer;
  */
 public class Parser {
     private ArrayList<TokenLexic> tokens;
+    private final Stack<String> stack=new Stack();
     protected final static ArrayList<String> LEXICALNAME= new ArrayList();
-    protected final static ArrayList<Integer> LEXICALCODE= new ArrayList();
+   // protected final static ArrayList<Integer> LEXICALCODE= new ArrayList();
     static {
         LEXICALNAME.add("SELECT");  //1
         LEXICALNAME.add("*");       //2
@@ -47,8 +49,10 @@ public class Parser {
         LEXICALNAME.add("SET");
         LEXICALNAME.add("LIKE");
         LEXICALNAME.add("BETWEEN");
+        LEXICALNAME.add("ORDER");
+        LEXICALNAME.add("BY");
         
-        for (int i=1;i<=21;i++) LEXICALCODE.add(i);
+        //for (int i=1;i<=21;i++) LEXICALCODE.add(i);
     }
 //    public final static int START=0;
 //    public final static int SELECT=1;
@@ -106,6 +110,7 @@ public class Parser {
     }
     private void init(){
         this.currentNode=initialNode;
+        this.stack.clear();
     }
     Node getJunkNode(){
         return jN;
@@ -116,6 +121,15 @@ public class Parser {
     
     public static Parser getSQLParser(){
         return SQLPARSER;
+    }
+    public String stackPeek(){
+      return stack.empty()? null : this.stack.peek();
+    }
+    public void stackPush(String push){
+      this.stack.push(push);
+    }
+    public void popStack(){
+      this.stack.pop();
     }
     private static Parser makeSQLParser(){
         Parser p= new Parser();
@@ -165,8 +179,11 @@ public class Parser {
         NormalNode num1Between = new NormalNode(p,false);
         NormalNode andBetween = new NormalNode(p,false);
         NormalNode num2Between = new NormalNode(p,false);
+        NormalNode order = new NormalNode(p,false);
+        NormalNode by = new NormalNode(p,false);
+        NormalNode kolomOrder = new NormalNode(p,false);
         
-        initial.addNext(LEXICALNAME.indexOf("SELECT"), select, null, null);
+        initial.addNext(LEXICALNAME.indexOf("SELECT"), select, SQLKeywords.SELECT, null);
         initial.addNext(LEXICALNAME.indexOf("INSERT"), insert, null, null);
         initial.addNext(LEXICALNAME.indexOf("DELETE"), delete, null, null);
         initial.addNext(LEXICALNAME.indexOf("UPDATE"), update, null, null);
@@ -202,8 +219,10 @@ public class Parser {
         operator.addNext(VARIABLE, angkaKolomWhere, null, null);
         
         angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, SQLKeywords.SELECT);
         angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
         angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
+        angkaKolomWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.ORDER), order, null, SQLKeywords.SELECT);
         
         stringWhere.addNext(LEXICALNAME.indexOf(SQLKeywords.EQ), eqWhere, null, null);
         
@@ -211,6 +230,8 @@ public class Parser {
 //        eqWhere.addNext(CONSTANT_STRING, stringKolom, null, null);
         
         stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, SQLKeywords.SELECT);
+        stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.ORDER), order, null, SQLKeywords.SELECT);
         stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
         stringKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
@@ -225,6 +246,8 @@ public class Parser {
         operatorKolom.addNext(CONSTANT_NUMBER, angkaKolom, null, null);
         
         angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, SQLKeywords.SELECT);
+        angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.ORDER), order, null, SQLKeywords.SELECT);
         angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
         angkaKolom.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
@@ -233,12 +256,16 @@ public class Parser {
         eq2Where.addNext(CONSTANT_NUMBER, string2Where, null, null);
 		
         string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, SQLKeywords.SELECT);
+        string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.ORDER), order, null, SQLKeywords.SELECT);
         string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
         string2Where.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
         like.addNext(CONSTANT_STRING, stringLike, null,null);
         
         stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, SQLKeywords.SELECT);
+        stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.ORDER), order, null, SQLKeywords.SELECT);
         stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
         stringLike.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
@@ -249,6 +276,8 @@ public class Parser {
         andBetween.addNext(CONSTANT_NUMBER, num2Between, null, null);
         
         num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, SQLKeywords.SELECT);
+        num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.ORDER), order, null, SQLKeywords.SELECT);
         num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.AND), where, null, null);
         num2Between.addNext(LEXICALNAME.indexOf(SQLKeywords.OR), where, null, null);
         
@@ -296,6 +325,13 @@ public class Parser {
         valuesUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
         valuesUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.COMMA), set, null, null);
         valuesUpdate.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        
+        order.addNext(LEXICALNAME.indexOf(SQLKeywords.BY), by, null, null);
+        
+        by.addNext(VARIABLE, kolomOrder, null, null);
+        
+        kolomOrder.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null,null);
+        
         p.setNode(initial);
         return p;
     }
