@@ -27,7 +27,7 @@ public class SQLToMongo {
 //        System.out.println(p.parse("\"b\""));
         
         System.out.println(p.parse("SELECT *\n" +
-"FROM users where status =\"A\" and age > 25 order by id;"));
+"FROM users where status =\"A\" and age > 25 order by id ASC;"));
 //        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
 //"                  age,\n" +
 //"                  status)\n" +

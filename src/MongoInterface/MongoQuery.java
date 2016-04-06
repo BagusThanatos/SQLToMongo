@@ -20,7 +20,7 @@ public class MongoQuery {
     private Document values;
     private List<String> fields;
     private boolean order;
-
+    private boolean asc;
  
     public static enum Type {
         INSERT,
@@ -35,6 +35,14 @@ public class MongoQuery {
     public String getCollection() {
         return collection;
     }
+
+  public boolean isAsc() {
+    return asc;
+  }
+
+  public void setAsc(boolean asc) {
+    this.asc = asc;
+  }
 
   public String getOrderField() {
     return orderField;

@@ -83,6 +83,8 @@ public class SQLToMongo {
             if(tokens.get(i).getValue().toUpperCase().equals("ORDER")){
               query.setOrderField(tokens.get(++i).getValue());
               query.setOrder(true);
+              temp = tokens.get(++i).getValue().toUpperCase();
+              query.setAsc(temp.equals("ASC"));
             }
             query.setFields(fields);
             query.setCollection(coll);

@@ -42,7 +42,10 @@ public class MongoDB {
         }
         else result = collection.find();
         if(query.getFields()!=null) 
-            return result.projection(Projections.include(query.getFields()));
+            result = result.projection(Projections.include(query.getFields()));
+        if(query.isOrder()) {
+          return result.sort(new Document(query.getOrderField(), query.isAsc()? 1 : -1));
+        }
         return result;
     }
     public UpdateResult executeUpdate(MongoQuery query){

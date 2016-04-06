@@ -51,7 +51,8 @@ public class Parser {
         LEXICALNAME.add("BETWEEN");
         LEXICALNAME.add("ORDER");
         LEXICALNAME.add("BY");
-        
+        LEXICALNAME.add("ASC");
+        LEXICALNAME.add("DESC");
         //for (int i=1;i<=21;i++) LEXICALCODE.add(i);
     }
 //    public final static int START=0;
@@ -182,6 +183,8 @@ public class Parser {
         NormalNode order = new NormalNode(p,false);
         NormalNode by = new NormalNode(p,false);
         NormalNode kolomOrder = new NormalNode(p,false);
+        NormalNode asc = new NormalNode(p,false);
+        NormalNode desc = new NormalNode(p,false);
         
         initial.addNext(LEXICALNAME.indexOf("SELECT"), select, SQLKeywords.SELECT, null);
         initial.addNext(LEXICALNAME.indexOf("INSERT"), insert, null, null);
@@ -330,7 +333,12 @@ public class Parser {
         
         by.addNext(VARIABLE, kolomOrder, null, null);
         
-        kolomOrder.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null,null);
+        kolomOrder.addNext(LEXICALNAME.indexOf(SQLKeywords.ASC), asc, null,null);
+        kolomOrder.addNext(LEXICALNAME.indexOf(SQLKeywords.DESC), desc, null,null);
+        
+        asc.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null,null);
+        
+        desc.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null,null);
         
         p.setNode(initial);
         return p;

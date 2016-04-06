@@ -37,5 +37,7 @@ public class SQLKeywords {
     public static String VARIABLE=" VARIABLE";
     public static String ORDER = "ORDER";
     public static String BY = "BY";
+    public static String ASC = "ASC";
+    public static String DESC="DESC";
     
 }
