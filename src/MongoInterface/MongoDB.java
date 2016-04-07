@@ -6,6 +6,7 @@
 package MongoInterface;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -44,9 +45,16 @@ public class MongoDB {
         if(query.getFields()!=null) 
             result = result.projection(Projections.include(query.getFields()));
         if(query.isOrder()) {
-          return result.sort(new Document(query.getOrderField(), query.isAsc()? 1 : -1));
+          return result.sort(new Document(query.getSpecField(), query.isAsc()? 1 : -1));
         }
         return result;
+    }
+    public DistinctIterable<Document> executeDistinct(MongoQuery query){
+      MongoCollection<Document> collection = md.getCollection(query.getCollection());
+      if(query.getCond()!=null){
+        return collection.distinct(query.getSpecField(),query.getCond(),Document.class);
+      }
+      return collection.distinct(query.getSpecField(), Document.class);
     }
     public UpdateResult executeUpdate(MongoQuery query){
         MongoCollection<Document> collection = md.getCollection(query.getCollection());

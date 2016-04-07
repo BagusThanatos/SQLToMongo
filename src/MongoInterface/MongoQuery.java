@@ -14,7 +14,7 @@ import org.bson.conversions.Bson;
  * @author BagusThanatos (github.com/BagusThanatos)
  */
 public class MongoQuery {
-    private String collection,query,orderField;
+    private String collection,query,specField;
     private Type type;
     private Bson cond;
     private Document values;
@@ -26,7 +26,8 @@ public class MongoQuery {
         INSERT,
         SELECT,
         UPDATE,
-        DELETE
+        DELETE,
+        DISTINCT
     }
     
     public MongoQuery(){
@@ -44,15 +45,15 @@ public class MongoQuery {
     this.asc = asc;
   }
 
-  public String getOrderField() {
-    return orderField;
+  public String getSpecField() {
+    return specField;
   }
   public void setOrder(boolean b){
     this.order= b;
   }
 
-  public void setOrderField(String orderField) {
-    this.orderField = orderField;
+  public void setSpecField(String specField) {
+    this.specField = specField;
   }
 
     public boolean isOrder() {

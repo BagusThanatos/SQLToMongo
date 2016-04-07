@@ -39,5 +39,6 @@ public class SQLKeywords {
     public static String BY = "BY";
     public static String ASC = "ASC";
     public static String DESC="DESC";
+    public static final String DISTINCT="DISTINCT";
     
 }

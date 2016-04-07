@@ -26,8 +26,10 @@ public class SQLToMongo {
         Parser p = Parser.getSQLParser();
 //        System.out.println(p.parse("\"b\""));
         
-        System.out.println(p.parse("SELECT *\n" +
-"FROM users where status =\"A\" and age > 25 and age < 50 order by id ASC;"));
+//        System.out.println(p.parse("SELECT *\n" +
+//"FROM users where status =\"A\" and age > 25 and age < 50 order by id ASC;"));
+      System.out.println(p.parse("SELECT distinct id\n" +
+      "FROM users where status =\"A\" and age > 25 and age < 50 ;"));
 //        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
 //"                  age,\n" +
 //"                  status)\n" +
@@ -65,7 +67,7 @@ public class SQLToMongo {
                 System.out.println("coba");
                 //db.insertQuery(query);
                 System.out.println("Order : "+query.isOrder());
-                System.out.println("Order Field : "+query.getOrderField());
+                System.out.println("Order Field : "+query.getSpecField());
                 break;
                 
             case INSERT:

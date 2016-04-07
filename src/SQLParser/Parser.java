@@ -53,6 +53,7 @@ public class Parser {
         LEXICALNAME.add("BY");
         LEXICALNAME.add("ASC");
         LEXICALNAME.add("DESC");
+        LEXICALNAME.add("DISTINCT");
         //for (int i=1;i<=21;i++) LEXICALCODE.add(i);
     }
 //    public final static int START=0;
@@ -185,6 +186,8 @@ public class Parser {
         NormalNode kolomOrder = new NormalNode(p,false);
         NormalNode asc = new NormalNode(p,false);
         NormalNode desc = new NormalNode(p,false);
+        NormalNode distinct = new NormalNode(p,false);
+        NormalNode kolomDistinct = new NormalNode(p,false);
         
         initial.addNext(LEXICALNAME.indexOf("SELECT"), select, SQLKeywords.SELECT, null);
         initial.addNext(LEXICALNAME.indexOf("INSERT"), insert, null, null);
@@ -195,6 +198,11 @@ public class Parser {
         select.addNext(LEXICALNAME.indexOf("ALL"), all, null, null);
         select.addNext(LEXICALNAME.indexOf("*"), all, null, null);
         select.addNext(VARIABLE, select_Expr, null, null);
+        select.addNext(LEXICALNAME.indexOf("DISTINCT"),distinct, null, SQLKeywords.SELECT);
+        
+        distinct.addNext(VARIABLE, kolomDistinct, null,null);
+        
+        kolomDistinct.addNext(LEXICALNAME.indexOf(SQLKeywords.FROM), from, null,null);
         
         all.addNext(LEXICALNAME.indexOf(SQLKeywords.FROM), from, null, null);
         
