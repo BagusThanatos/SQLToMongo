@@ -54,6 +54,11 @@ public class Parser {
         LEXICALNAME.add("ASC");
         LEXICALNAME.add("DESC");
         LEXICALNAME.add("DISTINCT");
+        LEXICALNAME.add("LEFT");
+        LEXICALNAME.add("OUTER");
+        LEXICALNAME.add("JOIN");
+        LEXICALNAME.add("ON");
+        LEXICALNAME.add("USING");
         //for (int i=1;i<=21;i++) LEXICALCODE.add(i);
     }
 //    public final static int START=0;
@@ -188,7 +193,12 @@ public class Parser {
         NormalNode desc = new NormalNode(p,false);
         NormalNode distinct = new NormalNode(p,false);
         NormalNode kolomDistinct = new NormalNode(p,false);
-        
+        NormalNode left = new NormalNode(p,false);
+        NormalNode outer = new NormalNode(p, false);
+        NormalNode join = new NormalNode(p, false);
+        NormalNode onUsing = new NormalNode(p, false);
+        NormalNode kolomJoin = new NormalNode(p, false);
+        NormalNode tableJoin = new NormalNode(p, false);
         initial.addNext(LEXICALNAME.indexOf("SELECT"), select, SQLKeywords.SELECT, null);
         initial.addNext(LEXICALNAME.indexOf("INSERT"), insert, null, null);
         initial.addNext(LEXICALNAME.indexOf("DELETE"), delete, null, null);
@@ -207,7 +217,7 @@ public class Parser {
         all.addNext(LEXICALNAME.indexOf(SQLKeywords.FROM), from, null, null);
         
         from.addNext(VARIABLE, table, null, null);
-        
+
         select_Expr.addNext(LEXICALNAME.indexOf(SQLKeywords.COMMA), commaSelect, null, null);
         select_Expr.addNext(LEXICALNAME.indexOf(SQLKeywords.FROM), from, null, null);
         
@@ -215,6 +225,21 @@ public class Parser {
         
         table.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
         table.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
+        table.addNext(LEXICALNAME.indexOf("LEFT"),left, null,null);
+        
+        left.addNext(LEXICALNAME.indexOf("OUTER"),outer, null, null);
+        
+        outer.addNext(LEXICALNAME.indexOf("JOIN"), join, null,null);
+        
+        join.addNext(VARIABLE, tableJoin, null, null);
+        
+        tableJoin.addNext(LEXICALNAME.indexOf("USING"), onUsing, null,null);
+        tableJoin.addNext(LEXICALNAME.indexOf("ON"), onUsing, null,null);
+        
+        onUsing.addNext(VARIABLE, kolomJoin, null,null);
+        
+        kolomJoin.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        kolomJoin.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
         
         where.addNext(CONSTANT_NUMBER, angkaWhere, null, null);
         where.addNext(CONSTANT_STRING, stringWhere, null, null);

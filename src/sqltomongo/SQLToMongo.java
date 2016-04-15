@@ -28,8 +28,8 @@ public class SQLToMongo {
         
 //        System.out.println(p.parse("SELECT *\n" +
 //"FROM users where status =\"A\" and age > 25 and age < 50 order by id ASC;"));
-      System.out.println(p.parse("SELECT distinct id\n" +
-      "FROM users where status =\"A\" and age > 25 and age < 50 ;"));
+//      System.out.println(p.parse("SELECT distinct id\n" +
+//      "FROM users where status =\"A\" and age > 25 and age < 50 ;"));
 //        System.out.println(p.parse("INSERT INTO users(user_id,\n" +
 //"                  age,\n" +
 //"                  status)\n" +
@@ -39,6 +39,7 @@ public class SQLToMongo {
 //un-comment baris baris di bawah kalo mau konek ke db
         //MongoDB db = new MongoDB();
         //db.setDatabase("db1");
+        System.out.println(p.parse("Select * from a left outer join b using c;"));
         SQLTranslator.SQLToMongo sqlToMongo = new SQLTranslator.SQLToMongo();
         MongoQuery query = sqlToMongo.translate(p.getTokens());
         System.out.println(p.getTokens().toString());

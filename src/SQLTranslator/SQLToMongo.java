@@ -69,7 +69,7 @@ public class SQLToMongo {
             query.setType(MongoQuery.Type.INSERT);
         }
         else if (type.equals(SQLKeywords.SELECT)){
-          boolean distinct = false;
+          boolean distinct = false,agg = false;
           String temp = tokens.get(1).getValue().toUpperCase();
           List<String> fields=null;
           Bson cond = null;
@@ -95,6 +95,19 @@ public class SQLToMongo {
           String coll = tokens.get(++i).getValue();
           if (++i < tokens.size()) {
             temp = tokens.get(i).getValue().toUpperCase();
+            if(temp.equals(SQLKeywords.LEFT)){
+              String colToJoin = tokens.get(i+3).getValue();
+              String fieldJoin = tokens.get(i+5).getValue();
+              Document dd = new Document("from",colToJoin);
+              dd.append("localField", fieldJoin);
+              dd.append("foreignField", fieldJoin);
+              dd.append("as", colToJoin);
+              dd = new Document("$lookup",dd);
+              query.setAggregateQuery(dd);
+              i+=6;
+              temp = tokens.get(i).getValue().toUpperCase();
+              agg = true;
+            }
             if(temp.equals(SQLKeywords.WHERE)){
               i++;
               cond= translateWhere(tokens);
@@ -113,6 +126,7 @@ public class SQLToMongo {
           query.setCollection(coll);
           query.setCond(cond);
           if(distinct) query.setType(MongoQuery.Type.DISTINCT);
+          else if(agg) query.setType(MongoQuery.Type.AGGREGATE);
           else query.setType(MongoQuery.Type.SELECT);
         }
         else if(type.equals(SQLKeywords.UPDATE)){

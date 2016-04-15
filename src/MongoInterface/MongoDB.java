@@ -6,6 +6,7 @@
 package MongoInterface;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -14,8 +15,12 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import java.util.Arrays;
+import java.util.List;
 import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 /**
  *
@@ -49,12 +54,29 @@ public class MongoDB {
         }
         return result;
     }
-    public DistinctIterable<Document> executeDistinct(MongoQuery query){
+    public DistinctIterable<BsonValue> executeDistinct(MongoQuery query){
       MongoCollection<Document> collection = md.getCollection(query.getCollection());
       if(query.getCond()!=null){
-        return collection.distinct(query.getSpecField(),query.getCond(),Document.class);
+        return collection.distinct(query.getSpecField(),query.getCond(),BsonValue.class);
       }
-      return collection.distinct(query.getSpecField(), Document.class);
+      return collection.distinct(query.getSpecField(), BsonValue.class);
+    }
+    public AggregateIterable<Document> executeAggregate(MongoQuery query){
+      MongoCollection<Document> collection = md.getCollection(query.getCollection());
+      List<Bson> q = Arrays.asList(query.getAggregateQuery());
+      if(query.getCond()!=null){
+        q.add(new Document("$match", query.getCond()));
+      }
+      if(query.getFields()!=null){
+        Document d = new Document();
+        for(String field : query.getFields()){
+          d.append(field, true);
+        }
+        q.add(new Document("$project",d));
+      }
+      AggregateIterable<Document> ret = collection.aggregate(q);
+      
+      return ret;
     }
     public UpdateResult executeUpdate(MongoQuery query){
         MongoCollection<Document> collection = md.getCollection(query.getCollection());

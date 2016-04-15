@@ -21,13 +21,14 @@ public class MongoQuery {
     private List<String> fields;
     private boolean order;
     private boolean asc;
- 
+    private Bson aggregateQuery;
     public static enum Type {
         INSERT,
         SELECT,
         UPDATE,
         DELETE,
-        DISTINCT
+        DISTINCT,
+        AGGREGATE
     }
     
     public MongoQuery(){
@@ -37,6 +38,14 @@ public class MongoQuery {
         return collection;
     }
 
+  public Bson getAggregateQuery() {
+    return aggregateQuery;
+  }
+
+  public void setAggregateQuery(Bson aggregateQuery) {
+    this.aggregateQuery = aggregateQuery;
+  }
+  
   public boolean isAsc() {
     return asc;
   }

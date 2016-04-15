@@ -40,5 +40,9 @@ public class SQLKeywords {
     public static String ASC = "ASC";
     public static String DESC="DESC";
     public static final String DISTINCT="DISTINCT";
-    
+    public static final String LEFT ="LEFT";
+    public static final String ON ="ON";
+    public static final String OUTER ="OUTER";
+    public static final String USING ="USING";
+    public static final String JOIN ="JOIN";
 }

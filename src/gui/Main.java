@@ -55,7 +55,6 @@ public class Main extends javax.swing.JFrame {
     butSetDB = new javax.swing.JButton();
     jMenuBar1 = new javax.swing.JMenuBar();
     menuFile = new javax.swing.JMenu();
-    menuEdit = new javax.swing.JMenu();
     menuHelp = new javax.swing.JMenu();
     menuAbout = new javax.swing.JMenu();
 
@@ -122,9 +121,6 @@ public class Main extends javax.swing.JFrame {
 
     menuFile.setText("File");
     jMenuBar1.add(menuFile);
-
-    menuEdit.setText("Edit");
-    jMenuBar1.add(menuEdit);
 
     menuHelp.setText("Help");
     menuHelp.setToolTipText("");
@@ -200,7 +196,8 @@ public class Main extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
     private void buttExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttExecuteActionPerformed
-        boolean valid = setValid();
+
+      boolean valid = setValid();
         if(valid){
           textResultSet.setText("");
           Thread t = new Thread(new TranslatorThread(this, p.getTokens()));
@@ -235,7 +232,7 @@ public class Main extends javax.swing.JFrame {
       m.setDatabase(comboDatabases.getSelectedItem().toString());
     }
     else
-      JOptionPane.showMessageDialog(this, "Pilih Database yang valid");
+      JOptionPane.showMessageDialog(this, "Pilih Database yang valid","Error!", JOptionPane.ERROR_MESSAGE);
   }
   private void clearListDB(){
     while(comboDatabases.getItemCount()>1) comboDatabases.removeItemAt(1);
@@ -317,7 +314,6 @@ public class Main extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JLabel labelValid;
   private javax.swing.JMenu menuAbout;
-  private javax.swing.JMenu menuEdit;
   private javax.swing.JMenu menuFile;
   private javax.swing.JMenu menuHelp;
   private javax.swing.JTextArea textInputQuery;
