@@ -8,6 +8,7 @@ package SQLTranslator;
 import MongoInterface.MongoDB;
 import MongoInterface.MongoQuery;
 import SQLParser.TokenLexic;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -63,7 +64,14 @@ public class TranslatorThread implements Runnable{
               i+=1;
             }
             break;
-
+          case AGGREGATE:
+            AggregateIterable<Document> r = db.executeAggregate(query);
+            finish = System.nanoTime();
+            for(Document d : r){
+              m.appendResult(d.toJson());
+              i++;
+            }  
+            break;
           case INSERT:
             db.executeInsert(query);
             finish= System.nanoTime();
