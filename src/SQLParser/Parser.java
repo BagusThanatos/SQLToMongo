@@ -234,6 +234,7 @@ public class Parser {
         table.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
         table.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
         table.addNext(LEXICALNAME.indexOf("LEFT"),left, null,null);
+        table.addNext(LEXICALNAME.indexOf(SQLKeywords.ORDER), order, null, null);
         
         left.addNext(LEXICALNAME.indexOf("OUTER"),outer, null, null);
         
