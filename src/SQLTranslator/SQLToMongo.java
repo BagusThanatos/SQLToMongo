@@ -124,8 +124,8 @@ public class SQLToMongo {
               temp = tokens.get(i).getUpperCasedValue();
               agg = true;
             }
+            i++;
             if(temp.equals(SQLKeywords.WHERE)){
-              i++;
               cond= translateWhere(tokens);
             }
           }
