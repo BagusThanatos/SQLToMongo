@@ -197,7 +197,7 @@ public class Main extends javax.swing.JFrame {
 
     private void buttExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttExecuteActionPerformed
 
-      boolean valid = setValid();
+      boolean valid = setValid(isQueryValid(textInputQuery.getText()));
         if(valid){
           textResultSet.setText("");
           Thread t = new Thread(new TranslatorThread(this, p.getTokens()));
@@ -206,7 +206,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_buttExecuteActionPerformed
 
     private void buttValidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttValidActionPerformed
-        setValid();
+        setValid(isQueryValid(textInputQuery.getText()));
     }//GEN-LAST:event_buttValidActionPerformed
 
     private void butClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butClearActionPerformed
@@ -237,8 +237,7 @@ public class Main extends javax.swing.JFrame {
   private void clearListDB(){
     while(comboDatabases.getItemCount()>1) comboDatabases.removeItemAt(1);
   }
-    private boolean setValid(){
-        boolean valid = isQueryValid(textInputQuery.getText());
+    public boolean setValid(boolean valid){
         String text;
         if(valid) text="VALID";
         else text = "TIDAK VALID";
@@ -249,7 +248,6 @@ public class Main extends javax.swing.JFrame {
         if(query.length()>0){
             return p.parse(query);
         }
-        
         return false;
     }
     

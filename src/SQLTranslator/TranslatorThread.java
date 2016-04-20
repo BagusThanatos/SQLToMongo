@@ -39,6 +39,11 @@ public class TranslatorThread implements Runnable{
         String append="";
         start = System.nanoTime();
         MongoQuery query = sqlToMongo.translate(tokens);
+        if(query==null){
+          m.appendResult("Query error! Please check it again");
+          m.setValid(false);
+          return;
+        }
         MongoDB db = MongoDB.getDatabaseConnection();
         if (null!=query.getType()) switch (query.getType()) {
           case SELECT:
@@ -80,7 +85,7 @@ public class TranslatorThread implements Runnable{
           case UPDATE:
             UpdateResult ur = db.executeUpdate(query);
             finish = System.nanoTime();
-            m.appendResult(ur.toString());
+            m.appendResult(ur.getModifiedCount()+" rows updated");
             break;
           default:
             DeleteResult dr = db.executeDelete(query);

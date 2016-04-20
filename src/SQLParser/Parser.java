@@ -197,8 +197,16 @@ public class Parser {
         NormalNode outer = new NormalNode(p, false);
         NormalNode join = new NormalNode(p, false);
         NormalNode onUsing = new NormalNode(p, false);
-        NormalNode kolomJoin = new NormalNode(p, false);
+        NormalNode kolomTableJoin = new NormalNode(p, false);
         NormalNode tableJoin = new NormalNode(p, false);
+        NormalNode dot1Join = new NormalNode(p,false);
+        NormalNode kolom1join = new NormalNode(p,false);
+        NormalNode eqJoin = new NormalNode(p,false);
+        NormalNode table2Join = new NormalNode(p,false);
+        NormalNode dot2Join = new NormalNode(p,false);
+        NormalNode kolom2Join = new NormalNode(p, false);
+        
+        
         initial.addNext(LEXICALNAME.indexOf("SELECT"), select, SQLKeywords.SELECT, null);
         initial.addNext(LEXICALNAME.indexOf("INSERT"), insert, null, null);
         initial.addNext(LEXICALNAME.indexOf("DELETE"), delete, null, null);
@@ -236,10 +244,24 @@ public class Parser {
         tableJoin.addNext(LEXICALNAME.indexOf("USING"), onUsing, null,null);
         tableJoin.addNext(LEXICALNAME.indexOf("ON"), onUsing, null,null);
         
-        onUsing.addNext(VARIABLE, kolomJoin, null,null);
+        onUsing.addNext(VARIABLE, kolomTableJoin, null,null);
         
-        kolomJoin.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
-        kolomJoin.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
+        kolomTableJoin.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        kolomTableJoin.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
+        kolomTableJoin.addNext(LEXICALNAME.indexOf("."), dot1Join, null, null);
+        
+        dot1Join.addNext(VARIABLE, kolom1join, null, null);
+        
+        kolom1join.addNext(LEXICALNAME.indexOf("="),eqJoin,null , null);
+        
+        eqJoin.addNext(VARIABLE, table2Join, null, null);
+        
+        table2Join.addNext(LEXICALNAME.indexOf("."), dot2Join, null , null);
+        
+        dot2Join.addNext(VARIABLE, kolom2Join, null, null);
+        
+        kolom2Join.addNext(LEXICALNAME.indexOf(SQLKeywords.SEMICOLON), semicolon, null, null);
+        kolom2Join.addNext(LEXICALNAME.indexOf(SQLKeywords.WHERE), where, null, null);
         
         where.addNext(CONSTANT_NUMBER, angkaWhere, null, null);
         where.addNext(CONSTANT_STRING, stringWhere, null, null);

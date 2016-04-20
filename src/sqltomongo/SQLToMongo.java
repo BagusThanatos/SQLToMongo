@@ -39,12 +39,16 @@ public class SQLToMongo {
 //un-comment baris baris di bawah kalo mau konek ke db
         //MongoDB db = new MongoDB();
         //db.setDatabase("db1");
-        System.out.println(p.parse("Select * from a left outer join b using c;"));
+        System.out.println(p.parse("Select * from a left outer join b using b.z=a.j;"));
         SQLTranslator.SQLToMongo sqlToMongo = new SQLTranslator.SQLToMongo();
         MongoQuery query = sqlToMongo.translate(p.getTokens());
         System.out.println(p.getTokens().toString());
         for(TokenLexic t : p.getTokens()){
             System.out.print(t.getTokenCode()+", ");
+        }
+        if(query==null){
+          System.out.println("Query salah");
+          return;
         }
         System.out.println();
         if(query.getFields()!=null) 

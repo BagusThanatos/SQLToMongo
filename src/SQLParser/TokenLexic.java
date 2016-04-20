@@ -15,7 +15,7 @@ public class TokenLexic {
     */
     private int tokenCode;
     private String string;
-    private String value;
+    private String value,upperCasedValue;
     
     public TokenLexic(int tc, String s, String v){
         this.tokenCode=tc;
@@ -30,6 +30,7 @@ public class TokenLexic {
 //        else if (tc==Parser.UNIDENTIFIED) this.string="Unidentified";
         
         this.value=v.replace("\"", "");
+        this.upperCasedValue= this.value.toUpperCase();
     }
 
     public int getTokenCode(){
@@ -40,6 +41,9 @@ public class TokenLexic {
     }
     public String getValue(){
         return this.value;
+    }
+    public String getUpperCasedValue(){
+      return this.upperCasedValue;
     }
     @Override
     public boolean equals(Object o){

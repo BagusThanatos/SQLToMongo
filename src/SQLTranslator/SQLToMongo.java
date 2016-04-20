@@ -27,7 +27,7 @@ public class SQLToMongo {
         i=0;
         String mongo;
         MongoQuery query = new MongoQuery();
-        String type = tokens.get(0).getValue().toUpperCase();
+        String type = tokens.get(0).getUpperCasedValue();
         if (type.equals(SQLKeywords.INSERT)){
             String collection = tokens.get(2).getValue();
             ArrayList<String> fields = new ArrayList();
@@ -70,7 +70,7 @@ public class SQLToMongo {
         }
         else if (type.equals(SQLKeywords.SELECT)){
           boolean distinct = false,agg = false;
-          String temp = tokens.get(1).getValue().toUpperCase();
+          String temp = tokens.get(1).getUpperCasedValue();
           List<String> fields=null;
           Bson cond = null;
           i =1;
@@ -94,18 +94,34 @@ public class SQLToMongo {
           else i++;
           String coll = tokens.get(++i).getValue();
           if (++i < tokens.size()) {
-            temp = tokens.get(i).getValue().toUpperCase();
+            temp = tokens.get(i).getUpperCasedValue();
             if(temp.equals(SQLKeywords.LEFT)){
-              String colToJoin = tokens.get(i+3).getValue();
-              String fieldJoin = tokens.get(i+5).getValue();
-              Document dd = new Document("from",colToJoin);
-              dd.append("localField", fieldJoin);
-              dd.append("foreignField", fieldJoin);
-              dd.append("as", colToJoin);
+              int offset = 6;
+              String collToJoin = tokens.get(i+3).getValue();
+              String localField = tokens.get(i+5).getValue(),
+                      foreignField=localField;
+              if(tokens.get(i+6).getValue().equals(".")) {
+                String collA = tokens.get(i+5).getValue();
+                String collB = tokens.get(i+9).getValue();
+                if(!collA.equals(coll) || !collB.equals(collToJoin))
+                  if (!collA.equals(collToJoin) || !collB.equals(coll))
+                    return null;
+                if(collA.equals(coll)){
+                  foreignField = tokens.get(i+11).getValue();
+                }
+                else {
+                  localField = tokens.get(i+11).getValue();
+                }
+                offset = 12;
+              }
+              Document dd = new Document("from",collToJoin);
+              dd.append("localField", localField);
+              dd.append("foreignField", foreignField);
+              dd.append("as", collToJoin);
               dd = new Document("$lookup",dd);
               query.setAggregateQuery(dd);
-              i+=6;
-              temp = tokens.get(i).getValue().toUpperCase();
+              i+=offset;
+              temp = tokens.get(i).getUpperCasedValue();
               agg = true;
             }
             if(temp.equals(SQLKeywords.WHERE)){
@@ -114,11 +130,11 @@ public class SQLToMongo {
             }
           }
           if(i < tokens.size()){
-            if(tokens.get(i).getValue().toUpperCase().equals("BY")){
+            if(tokens.get(i).getUpperCasedValue().equals("BY")){
               i+=1;
               query.setSpecField(tokens.get(i).getValue());
               query.setOrder(true);
-              temp = tokens.get(++i).getValue().toUpperCase();
+              temp = tokens.get(++i).getUpperCasedValue();
               query.setAsc(temp.equals("ASC"));
             }
           }
@@ -153,7 +169,7 @@ public class SQLToMongo {
         else if (type.equals(SQLKeywords.DELETE)){
             String coll = tokens.get(2).getValue();
             Bson cond = null;
-            if (tokens.get(3).getValue().toUpperCase().equals(SQLKeywords.WHERE)) {
+            if (tokens.get(3).getUpperCasedValue().equals(SQLKeywords.WHERE)) {
               i=4;
               cond = translateWhere(tokens);
             }
@@ -167,7 +183,7 @@ public class SQLToMongo {
     private Bson translateWhere(List<TokenLexic> token){
         Bson d = null;
  //       while(i<token.size()){
-        String temp = token.get(i+1).getValue().toUpperCase();
+        String temp = token.get(i+1).getUpperCasedValue();
         if(temp.equals(SQLKeywords.BETWEEN)){
             String field = token.get(i).getValue();
             String d1 = token.get(i+2).getValue();
@@ -213,7 +229,7 @@ public class SQLToMongo {
             } 
             i+=3;
         }
-        temp = token.get(i++).getValue().toUpperCase();
+        temp = token.get(i++).getUpperCasedValue();
         if(temp.equals(SQLKeywords.AND) ){
             d= and(d,translateWhere(token));
         }
