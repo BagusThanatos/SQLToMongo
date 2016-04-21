@@ -39,7 +39,7 @@ public class SQLToMongo {
 //un-comment baris baris di bawah kalo mau konek ke db
         //MongoDB db = new MongoDB();
         //db.setDatabase("db1");
-        System.out.println(p.parse("Select * from a order by b ASC;"));
+        System.out.println(p.parse("select * from inventory left outer join orders on inventory._id=orders._id;"));
         SQLTranslator.SQLToMongo sqlToMongo = new SQLTranslator.SQLToMongo();
         MongoQuery query = sqlToMongo.translate(p.getTokens());
         System.out.println(p.getTokens().toString());

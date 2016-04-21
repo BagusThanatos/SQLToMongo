@@ -108,12 +108,14 @@ public class SQLToMongo {
                     return null;
                 if(collA.equals(coll)){
                   foreignField = tokens.get(i+11).getValue();
+                  localField = tokens.get(i+7).getValue();
                 }
                 else {
                   localField = tokens.get(i+11).getValue();
+                  foreignField = tokens.get(i+7).getValue();
                 }
                 offset = 12;
-              }
+              }System.out.println(foreignField+localField);
               Document dd = new Document("from",collToJoin);
               dd.append("localField", localField);
               dd.append("foreignField", foreignField);
