@@ -237,19 +237,19 @@ public class Main extends javax.swing.JFrame {
   private void clearListDB(){
     while(comboDatabases.getItemCount()>1) comboDatabases.removeItemAt(1);
   }
-    public boolean setValid(boolean valid){
-        String text;
-        if(valid) text="VALID";
-        else text = "TIDAK VALID";
-        labelValid.setText(text);
-        return valid;
-    }
-    private boolean isQueryValid(String query){
-        if(query.length()>0){
-            return p.parse(query);
-        }
-        return false;
-    }
+  public boolean setValid(boolean valid){
+      String text;
+      if(valid) text="VALID";
+      else text = "TIDAK VALID";
+      labelValid.setText(text);
+      return valid;
+  }
+  private boolean isQueryValid(String query){
+      if(query.length()>0){
+          return p.parse(query);
+      }
+      return false;
+  }
     
     public void appendResult(String r){
         textResultSet.append(r+"\n");   

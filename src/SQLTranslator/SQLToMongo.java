@@ -14,6 +14,7 @@ import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.*;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.bson.conversions.Bson;
 
 /**
@@ -115,7 +116,7 @@ public class SQLToMongo {
                   foreignField = tokens.get(i+7).getValue();
                 }
                 offset = 12;
-              }System.out.println(foreignField+localField);
+              }
               Document dd = new Document("from",collToJoin);
               dd.append("localField", localField);
               dd.append("foreignField", foreignField);
@@ -149,14 +150,17 @@ public class SQLToMongo {
         }
         else if(type.equals(SQLKeywords.UPDATE)){
             String coll = tokens.get(1).getValue();
-            i = 3;
             Document doc = new Document();
             Bson cond = null;
-            String temp = tokens.get(i).getValue();
-            while(!temp.toUpperCase().equals(SQLKeywords.WHERE) && !temp.equals(";")){
-                String value =tokens.get(i+2).getValue();
+            String temp = tokens.get(3).getValue();
+            String value = tokens.get(5).getValue();
+            doc = doc.append("$set",new Document(temp,value));
+            i=6;
+            temp = tokens.get(i+1).getValue();
+            while(!tokens.get(i).getUpperCasedValue().equals(SQLKeywords.WHERE) && !temp.equals(";")){
+                value =tokens.get(i+3).getValue();
                 doc = doc.append("$set", new Document(temp,value));
-                i+=3;
+                i+=4;
                 temp = tokens.get(i).getValue();
             }
             if(temp.toUpperCase().equals(SQLKeywords.WHERE)){
@@ -190,7 +194,7 @@ public class SQLToMongo {
             String field = token.get(i).getValue();
             String d1 = token.get(i+2).getValue();
             String d2 = token.get(i+4).getValue();
-            d= and(gte(field, d1),lte(field,d2));
+            d= and(gte(field, new Integer(d1)),lte(field, new Integer(d2)));
             i+=5;
         } else{
             TokenLexic temp1 = token.get(i);
@@ -223,11 +227,11 @@ public class SQLToMongo {
             } else if (temp.equals(SQLKeywords.LIKE)){
                 if(valueT2.charAt(0)=='%')
                     valueT2 = "/"+valueT2.substring(1);
-                else valueT2 = "/^"+valueT2.substring(1);
+                else valueT2 = "/^"+valueT2;
                 if(valueT2.charAt(valueT2.length()-1)=='%') 
-                    valueT2 = valueT2.substring(0,valueT2.length()-2)+"/";
-                else valueT2 = valueT2.substring(0,valueT2.length()-2)+"/";
-                d= regex(valueT1, valueT2);
+                    valueT2 = valueT2.substring(0,valueT2.length()-1)+"/";
+                else valueT2 = valueT2+"/";System.out.println(Pattern.quote(valueT2));
+                d= regex(valueT1, Pattern.quote(valueT2));
             } 
             i+=3;
         }
