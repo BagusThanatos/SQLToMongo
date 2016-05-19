@@ -164,7 +164,7 @@ public class SQLToMongo {
                 temp = tokens.get(i).getValue();
             }
             if(temp.toUpperCase().equals(SQLKeywords.WHERE)){
-              i++;  
+              i++;
               cond = translateWhere(tokens);
             }
             query.setCollection(coll);
@@ -230,8 +230,8 @@ public class SQLToMongo {
                 else valueT2 = "/^"+valueT2;
                 if(valueT2.charAt(valueT2.length()-1)=='%') 
                     valueT2 = valueT2.substring(0,valueT2.length()-1)+"/";
-                else valueT2 = valueT2+"/";System.out.println(Pattern.quote(valueT2));
-                d= regex(valueT1, Pattern.quote(valueT2));
+                else valueT2 = valueT2+"/";System.out.println(Pattern.compile(valueT2));
+                d= regex(valueT1, Pattern.compile(valueT2));
             } 
             i+=3;
         }

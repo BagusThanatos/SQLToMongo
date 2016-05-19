@@ -39,7 +39,7 @@ public class SQLToMongo {
 //un-comment baris baris di bawah kalo mau konek ke db
         //MongoDB db = new MongoDB();
         //db.setDatabase("db1");
-        String q= "update tabel set a=1,b=2 where _id=01;";
+        String q= "update tabel set a=1,b=2 where _id=01 and cc like \"%l\";";
         System.out.println(q);
         System.out.println(p.parse(q));
         SQLTranslator.SQLToMongo sqlToMongo = new SQLTranslator.SQLToMongo();
