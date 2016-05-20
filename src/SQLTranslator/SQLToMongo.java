@@ -155,13 +155,13 @@ public class SQLToMongo {
             String temp = tokens.get(3).getValue();
             Object value = tokens.get(5).getTokenCode()==Parser.CONSTANT_NUMBER 
                     ? new Double(tokens.get(5).getValue()) : tokens.get(5).getValue(); 
-            doc = doc.append("$set",new Document(temp,value));
+            doc = doc.append(temp,value);
             i=6;
             temp = tokens.get(i+1).getValue();
             while(!tokens.get(i).getUpperCasedValue().equals(SQLKeywords.WHERE) && !temp.equals(";")){
                 value = tokens.get(i+3).getTokenCode()==Parser.CONSTANT_NUMBER 
                     ? new Double(tokens.get(i+3).getValue()) : tokens.get(i+3).getValue(); 
-                doc = doc.append("$set", new Document(temp,value));
+                doc = doc.append(temp,value);
                 i+=4;
                 temp = tokens.get(i).getValue();
             }
@@ -172,7 +172,7 @@ public class SQLToMongo {
             }
             query.setCollection(coll);
             query.setCond(cond);
-            query.setValues(doc);
+            query.setValues(doc.append("$set", doc));
             query.setType(MongoQuery.Type.UPDATE);
         }
         else if (type.equals(SQLKeywords.DELETE)){
