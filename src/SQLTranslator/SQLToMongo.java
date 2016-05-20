@@ -153,12 +153,14 @@ public class SQLToMongo {
             Document doc = new Document();
             Bson cond = null;
             String temp = tokens.get(3).getValue();
-            String value = tokens.get(5).getValue();
+            Object value = tokens.get(5).getTokenCode()==Parser.CONSTANT_NUMBER 
+                    ? new Integer(tokens.get(5).getValue()) : tokens.get(5).getValue(); 
             doc = doc.append("$set",new Document(temp,value));
             i=6;
             temp = tokens.get(i+1).getValue();
             while(!tokens.get(i).getUpperCasedValue().equals(SQLKeywords.WHERE) && !temp.equals(";")){
-                value =tokens.get(i+3).getValue();
+                value = tokens.get(i+3).getTokenCode()==Parser.CONSTANT_NUMBER 
+                    ? new Integer(tokens.get(i+3).getValue()) : tokens.get(i+3).getValue(); 
                 doc = doc.append("$set", new Document(temp,value));
                 i+=4;
                 temp = tokens.get(i).getValue();
@@ -231,7 +233,7 @@ public class SQLToMongo {
                 if(valueT2.charAt(valueT2.length()-1)=='%') 
                     valueT2 = valueT2.substring(0,valueT2.length()-1)+"/";
                 else valueT2 = valueT2+"/";System.out.println(Pattern.compile(valueT2));
-                d= regex(valueT1, Pattern.compile(valueT2));
+                d= regex(valueT1, Pattern.compile(valueT2+'i'));
             } 
             i+=3;
         }
