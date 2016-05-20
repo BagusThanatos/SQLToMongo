@@ -172,7 +172,7 @@ public class SQLToMongo {
             }
             query.setCollection(coll);
             query.setCond(cond);
-            query.setValues(doc.append("$set", doc));
+            query.setValues(new Document("$set", doc));
             query.setType(MongoQuery.Type.UPDATE);
         }
         else if (type.equals(SQLKeywords.DELETE)){
